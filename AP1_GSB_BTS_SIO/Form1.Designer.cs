@@ -2,15 +2,12 @@
 {
     partial class Form1
     {
-        /// <summary>
-        /// Variable nécessaire au concepteur.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
+        private System.Windows.Forms.TextBox txtUsername;
+        private System.Windows.Forms.TextBox txtPassword;
+        private System.Windows.Forms.Button btnLogin;
+        private System.Windows.Forms.Label lblMessage;
 
-        /// <summary>
-        /// Nettoyage des ressources utilisées.
-        /// </summary>
-        /// <param name="disposing">true si les ressources managées doivent être supprimées ; sinon, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -20,29 +17,50 @@
             base.Dispose(disposing);
         }
 
-        #region Code généré par le Concepteur Windows Form
-
-        /// <summary>
-        /// Méthode requise pour la prise en charge du concepteur - ne modifiez pas
-        /// le contenu de cette méthode avec l'éditeur de code.
-        /// </summary>
         private void InitializeComponent()
         {
+            this.txtUsername = new System.Windows.Forms.TextBox();
+            this.txtPassword = new System.Windows.Forms.TextBox();
+            this.btnLogin = new System.Windows.Forms.Button();
+            this.lblMessage = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            // 
-            // Form1
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+
+            this.txtUsername.Location = new System.Drawing.Point(12, 12);
+            this.txtUsername.Name = "txtUsername";
+            this.txtUsername.Size = new System.Drawing.Size(260, 20);
+            this.txtUsername.TabIndex = 0;
+
+            this.txtPassword.Location = new System.Drawing.Point(12, 38);
+            this.txtPassword.Name = "txtPassword";
+            this.txtPassword.Size = new System.Drawing.Size(260, 20);
+            this.txtPassword.TabIndex = 1;
+            this.txtPassword.UseSystemPasswordChar = true;
+
+            this.btnLogin.Location = new System.Drawing.Point(12, 64);
+            this.btnLogin.Name = "btnLogin";
+            this.btnLogin.Size = new System.Drawing.Size(260, 23);
+            this.btnLogin.TabIndex = 2;
+            this.btnLogin.Text = "Login";
+            this.btnLogin.UseVisualStyleBackColor = true;
+            this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
+
+            this.lblMessage.AutoSize = true;
+            this.lblMessage.Location = new System.Drawing.Point(12, 90);
+            this.lblMessage.Name = "lblMessage";
+            this.lblMessage.Size = new System.Drawing.Size(0, 13);
+            this.lblMessage.TabIndex = 3;
+
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1580, 820);
+            this.ClientSize = new System.Drawing.Size(284, 112);
+            this.Controls.Add(this.lblMessage);
+            this.Controls.Add(this.btnLogin);
+            this.Controls.Add(this.txtPassword);
+            this.Controls.Add(this.txtUsername);
             this.Name = "Form1";
-            this.Text = "Form1";
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Text = "Login";
             this.ResumeLayout(false);
-
+            this.PerformLayout();
         }
-
-        #endregion
     }
 }
-
