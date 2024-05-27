@@ -20,46 +20,29 @@ namespace AP1_GSB_BTS_SIO
         {
             InitializeComponent();
         }
-        private void ConnectToDatabase()
+
+        private UserInfo IsLoginValid(string username, string password)
         {
-            
-        }
+            UserInfo userInfo = new UserInfo { IsValid = false };
 
-        private void btnLogin_Click(object sender, EventArgs e)
-        {
-            string username = txtUsername.Text;
-            string password = txtPassword.Text;
-
-            if (IsLoginValid(username, password))
-            {
-                MessageBox.Show("Login successful!");
-            }
-            else
-            {
-                lblMessage.Text = "Invalid username or password.";
-                lblMessage.ForeColor = System.Drawing.Color.Red;
-            }
-        }
-
-        private bool IsLoginValid(string username, string password)
-        {
-            bool isValid = false;
-
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
                 try
                 {
                     conn.Open();
-                    string query = "SELECT COUNT(1) FROM Utilisateur WHERE nom=@username AND motdepasse=@password";
-                    SqlCommand cmd = new SqlCommand(query, conn);
+                    string query = "SELECT id_utilisateur, id_role FROM Utilisateur WHERE nom=@username AND motdepasse=@password";
+                    MySqlCommand cmd = new MySqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@username", username);
                     cmd.Parameters.AddWithValue("@password", password);
 
-                    int count = Convert.ToInt32(cmd.ExecuteScalar());
-
-                    if (count == 1)
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
-                        isValid = true;
+                        if (reader.Read())
+                        {
+                            userInfo.IsValid = true;
+                            userInfo.UserId = reader.GetInt32(0);
+                            userInfo.RoleId = reader.GetInt32(1);
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -68,8 +51,86 @@ namespace AP1_GSB_BTS_SIO
                 }
             }
 
-            return isValid;
+            return userInfo;
         }
+
+        private void btnLogin_Click(object sender, EventArgs e)
+        {
+            string email = txtEmail.Text;
+            string password = txtPassword.Text;
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    string query = "SELECT id_utilisateur, id_role FROM utilisateur WHERE email=@Email AND motdepasse=@Password";
+                    MySqlCommand cmd = new MySqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@Email", email);
+                    cmd.Parameters.AddWithValue("@Password", password);
+
+                    MySqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        int userId = reader.GetInt32("id_utilisateur");
+                        int roleId = reader.GetInt32("id_role");
+
+                        if (roleId == 1) // Administrateur
+                        {
+                            AdminForm adminForm = new AdminForm();
+                            this.Hide();
+                            adminForm.ShowDialog();
+                            this.Close();
+                        }
+                        else if (roleId == 2) // Visiteur
+                        {
+                            VisitorForm visitorForm = new VisitorForm(userId); // Passer userId comme visitorId
+                            this.Hide();
+                            visitorForm.ShowDialog();
+                            this.Close();
+                        }
+                        else if (roleId == 3) // Comptable
+                        {
+                            AccountantForm accountantForm = new AccountantForm();
+                            this.Hide();
+                            accountantForm.ShowDialog();
+                            this.Close();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Rôle utilisateur inconnu.");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Email ou mot de passe incorrect.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Erreur: " + ex.Message);
+                }
+            }
+        }
+
+
+        private void txtPassword_TextChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+    }
+
+
+
+    public class UserInfo
+    {
+        public bool IsValid { get; set; }
+        public int UserId { get; set; }
+        public int RoleId { get; set; }
     }
 
 }

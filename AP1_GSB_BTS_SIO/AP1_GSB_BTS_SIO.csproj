@@ -33,6 +33,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.6.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\packages\BouncyCastle.1.8.6.1\lib\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.2, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13.2\lib\itextsharp.dll</HintPath>
+    </Reference>
     <Reference Include="MySql.Data, Version=8.4.0.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Program Files (x86)\MySQL\MySQL Connector NET 8.4\MySql.Data.dll</HintPath>
@@ -50,16 +56,79 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccountantForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AccountantForm.Designer.cs">
+      <DependentUpon>AccountantForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AdminForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AdminForm.Designer.cs">
+      <DependentUpon>AdminForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ForfaitDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ForfaitDialog.Designer.cs">
+      <DependentUpon>ForfaitDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="HorsForfaitDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HorsForfaitDialog.Designer.cs">
+      <DependentUpon>HorsForfaitDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="JustificatifDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="JustificatifDialog.Designer.cs">
+      <DependentUpon>JustificatifDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TypeDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TypeDialog.Designer.cs">
+      <DependentUpon>TypeDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserDialog.Designer.cs">
+      <DependentUpon>UserDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="VisitorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VisitorForm.Designer.cs">
+      <DependentUpon>VisitorForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="AccountantForm.resx">
+      <DependentUpon>AccountantForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdminForm.resx">
+      <DependentUpon>AdminForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ForfaitDialog.resx">
+      <DependentUpon>ForfaitDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HorsForfaitDialog.resx">
+      <DependentUpon>HorsForfaitDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="JustificatifDialog.resx">
+      <DependentUpon>JustificatifDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -70,6 +139,16 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="TypeDialog.resx">
+      <DependentUpon>TypeDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserDialog.resx">
+      <DependentUpon>UserDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VisitorForm.resx">
+      <DependentUpon>VisitorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
