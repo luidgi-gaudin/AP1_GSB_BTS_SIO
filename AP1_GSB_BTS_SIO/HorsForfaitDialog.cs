@@ -33,5 +33,10 @@ namespace AP1_GSB_BTS_SIO
             DialogResult = DialogResult.Cancel;
             Close();
         }
+
+        private void HorsForfaitDialog_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

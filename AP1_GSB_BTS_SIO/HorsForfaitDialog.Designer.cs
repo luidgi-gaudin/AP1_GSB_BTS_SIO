@@ -33,14 +33,14 @@
             // 
             this.txtDescription.Location = new System.Drawing.Point(12, 25);
             this.txtDescription.Name = "txtDescription";
-            this.txtDescription.Size = new System.Drawing.Size(260, 20);
+            this.txtDescription.Size = new System.Drawing.Size(260, 26);
             this.txtDescription.TabIndex = 0;
             // 
             // txtMontant
             // 
             this.txtMontant.Location = new System.Drawing.Point(12, 64);
             this.txtMontant.Name = "txtMontant";
-            this.txtMontant.Size = new System.Drawing.Size(260, 20);
+            this.txtMontant.Size = new System.Drawing.Size(260, 26);
             this.txtMontant.TabIndex = 1;
             // 
             // btnOk
@@ -68,7 +68,7 @@
             this.lblDescription.AutoSize = true;
             this.lblDescription.Location = new System.Drawing.Point(12, 9);
             this.lblDescription.Name = "lblDescription";
-            this.lblDescription.Size = new System.Drawing.Size(60, 13);
+            this.lblDescription.Size = new System.Drawing.Size(89, 20);
             this.lblDescription.TabIndex = 4;
             this.lblDescription.Text = "Description";
             // 
@@ -77,7 +77,7 @@
             this.lblMontant.AutoSize = true;
             this.lblMontant.Location = new System.Drawing.Point(12, 48);
             this.lblMontant.Name = "lblMontant";
-            this.lblMontant.Size = new System.Drawing.Size(49, 13);
+            this.lblMontant.Size = new System.Drawing.Size(68, 20);
             this.lblMontant.TabIndex = 5;
             this.lblMontant.Text = "Montant";
             // 
@@ -92,8 +92,10 @@
             this.Controls.Add(this.txtDescription);
             this.Name = "HorsForfaitDialog";
             this.Text = "Ajouter Hors Forfait";
+            this.Load += new System.EventHandler(this.HorsForfaitDialog_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
     }
 }
