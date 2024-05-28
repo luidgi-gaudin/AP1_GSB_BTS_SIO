@@ -10,6 +10,9 @@ namespace AP1_GSB_BTS_SIO
 
         public int IdTypeFrais { get; set; }
         public decimal MontantTotal { get; set; }
+        public int Quantite { get; set; }
+        public string Date_frais { get; set; }
+        public string AnneeMois { get; set; } // AnneeMois au format "yyyy-MM"
 
         public ForfaitDialog()
         {
@@ -19,6 +22,8 @@ namespace AP1_GSB_BTS_SIO
         private void ForfaitDialog_Load(object sender, EventArgs e)
         {
             LoadTypeFrais();
+            // Set AnneeMois to the current month (you might want to change this logic depending on your needs)
+            AnneeMois = DateTime.Now.ToString("yyyy-MM");
         }
 
         private void LoadTypeFrais()
@@ -44,23 +49,34 @@ namespace AP1_GSB_BTS_SIO
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            if (cmbTypeFrais.SelectedItem is ComboBoxItem selectedItem)
+            DateTime selectedDate = dateTimePicker1.Value;
+
+            if (IsValidFraisDate(selectedDate))
             {
-                IdTypeFrais = int.Parse(selectedItem.Value);
-                if (decimal.TryParse(selectedItem.Montant, out decimal montant) && int.TryParse(txtQuantite.Text, out int quantite))
+                if (cmbTypeFrais.SelectedItem is ComboBoxItem selectedItem)
                 {
-                    MontantTotal = montant * quantite;
-                    DialogResult = DialogResult.OK;
-                    Close();
+                    IdTypeFrais = int.Parse(selectedItem.Value);
+                    if (decimal.TryParse(selectedItem.Montant, out decimal montant) && int.TryParse(txtQuantite.Text, out int quantite))
+                    {
+                        MontantTotal = montant * quantite;
+                        Quantite = int.Parse(txtQuantite.Text);
+                        Date_frais = selectedDate.ToString("yyyy-MM-dd");
+                        DialogResult = DialogResult.OK;
+                        Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Veuillez entrer une quantité valide.");
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("Veuillez entrer une quantité valide.");
+                    MessageBox.Show("Veuillez sélectionner un type de frais.");
                 }
             }
             else
             {
-                MessageBox.Show("Veuillez sélectionner un type de frais.");
+                MessageBox.Show("Date invalide. Veuillez sélectionner une date dans le mois actuel ou dans le mois précédent jusqu'au 10 du mois.", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -87,6 +103,33 @@ namespace AP1_GSB_BTS_SIO
             {
                 return Text;
             }
+        }
+
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+            DateTime selectedDate = dateTimePicker1.Value;
+
+            if (IsValidFraisDate(selectedDate))
+            {
+                Date_frais = selectedDate.ToString("yyyy-MM-dd");
+            }
+            else
+            {
+                MessageBox.Show("Date invalide. Veuillez sélectionner une date dans le mois actuel ou dans le mois précédent jusqu'au 10 du mois.", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private bool IsValidFraisDate(DateTime date)
+        {
+            DateTime firstDayOfMonth;
+            if (DateTime.TryParseExact(AnneeMois + "-01", "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out firstDayOfMonth))
+            {
+                DateTime startRange = firstDayOfMonth.AddDays(10); // 11th of the month
+                DateTime endRange = firstDayOfMonth.AddMonths(1).AddDays(9); // 10th of the next month
+
+                return date >= startRange && date <= endRange;
+            }
+            return false;
         }
     }
 }

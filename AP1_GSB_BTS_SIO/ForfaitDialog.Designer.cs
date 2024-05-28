@@ -27,27 +27,29 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.lblTypeFrais = new System.Windows.Forms.Label();
             this.lblQuantite = new System.Windows.Forms.Label();
+            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // cmbTypeFrais
             // 
             this.cmbTypeFrais.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbTypeFrais.FormattingEnabled = true;
-            this.cmbTypeFrais.Location = new System.Drawing.Point(12, 25);
+            this.cmbTypeFrais.Location = new System.Drawing.Point(12, 49);
             this.cmbTypeFrais.Name = "cmbTypeFrais";
-            this.cmbTypeFrais.Size = new System.Drawing.Size(260, 21);
+            this.cmbTypeFrais.Size = new System.Drawing.Size(260, 28);
             this.cmbTypeFrais.TabIndex = 0;
             // 
             // txtQuantite
             // 
-            this.txtQuantite.Location = new System.Drawing.Point(12, 64);
+            this.txtQuantite.Location = new System.Drawing.Point(12, 103);
             this.txtQuantite.Name = "txtQuantite";
-            this.txtQuantite.Size = new System.Drawing.Size(260, 20);
+            this.txtQuantite.Size = new System.Drawing.Size(260, 26);
             this.txtQuantite.TabIndex = 1;
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(116, 90);
+            this.btnOk.Location = new System.Drawing.Point(114, 205);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 2;
@@ -57,7 +59,7 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(197, 90);
+            this.btnCancel.Location = new System.Drawing.Point(195, 205);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 3;
@@ -68,24 +70,44 @@
             // lblTypeFrais
             // 
             this.lblTypeFrais.AutoSize = true;
-            this.lblTypeFrais.Location = new System.Drawing.Point(12, 9);
+            this.lblTypeFrais.Location = new System.Drawing.Point(8, 26);
             this.lblTypeFrais.Name = "lblTypeFrais";
-            this.lblTypeFrais.Size = new System.Drawing.Size(67, 13);
+            this.lblTypeFrais.Size = new System.Drawing.Size(104, 20);
             this.lblTypeFrais.TabIndex = 4;
             this.lblTypeFrais.Text = "Type de Frais";
             // 
             // lblQuantite
             // 
             this.lblQuantite.AutoSize = true;
-            this.lblQuantite.Location = new System.Drawing.Point(12, 48);
+            this.lblQuantite.Location = new System.Drawing.Point(8, 80);
             this.lblQuantite.Name = "lblQuantite";
-            this.lblQuantite.Size = new System.Drawing.Size(49, 13);
+            this.lblQuantite.Size = new System.Drawing.Size(70, 20);
             this.lblQuantite.TabIndex = 5;
             this.lblQuantite.Text = "Quantité";
             // 
+            // dateTimePicker1
+            // 
+            this.dateTimePicker1.Location = new System.Drawing.Point(16, 159);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.Size = new System.Drawing.Size(258, 26);
+            this.dateTimePicker1.TabIndex = 6;
+            this.dateTimePicker1.ValueChanged += new System.EventHandler(this.dateTimePicker1_ValueChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 136);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(44, 20);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "Date";
+            // 
             // ForfaitDialog
             // 
-            this.ClientSize = new System.Drawing.Size(284, 125);
+            this.ClientSize = new System.Drawing.Size(284, 240);
+            this.ControlBox = false;
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.lblQuantite);
             this.Controls.Add(this.lblTypeFrais);
             this.Controls.Add(this.btnCancel);
@@ -93,10 +115,15 @@
             this.Controls.Add(this.txtQuantite);
             this.Controls.Add(this.cmbTypeFrais);
             this.Name = "ForfaitDialog";
-            this.Text = "Ajouter Forfait";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.TopMost = true;
             this.Load += new System.EventHandler(this.ForfaitDialog_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
+
+        private System.Windows.Forms.DateTimePicker dateTimePicker1;
+        private System.Windows.Forms.Label label1;
     }
 }

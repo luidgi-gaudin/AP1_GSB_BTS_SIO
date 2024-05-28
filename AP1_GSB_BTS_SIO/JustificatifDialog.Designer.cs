@@ -36,9 +36,9 @@
             // 
             // btnBrowse
             // 
-            this.btnBrowse.Location = new System.Drawing.Point(278, 23);
+            this.btnBrowse.Location = new System.Drawing.Point(278, 27);
             this.btnBrowse.Name = "btnBrowse";
-            this.btnBrowse.Size = new System.Drawing.Size(75, 23);
+            this.btnBrowse.Size = new System.Drawing.Size(99, 24);
             this.btnBrowse.TabIndex = 1;
             this.btnBrowse.Text = "Parcourir";
             this.btnBrowse.UseVisualStyleBackColor = true;
@@ -46,9 +46,9 @@
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(116, 51);
+            this.btnOk.Location = new System.Drawing.Point(116, 57);
             this.btnOk.Name = "btnOk";
-            this.btnOk.Size = new System.Drawing.Size(75, 23);
+            this.btnOk.Size = new System.Drawing.Size(75, 24);
             this.btnOk.TabIndex = 2;
             this.btnOk.Text = "OK";
             this.btnOk.UseVisualStyleBackColor = true;
@@ -56,9 +56,9 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(197, 51);
+            this.btnCancel.Location = new System.Drawing.Point(197, 57);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.Size = new System.Drawing.Size(75, 24);
             this.btnCancel.TabIndex = 3;
             this.btnCancel.Text = "Annuler";
             this.btnCancel.UseVisualStyleBackColor = true;
@@ -75,14 +75,16 @@
             // 
             // JustificatifDialog
             // 
-            this.ClientSize = new System.Drawing.Size(364, 86);
+            this.ClientSize = new System.Drawing.Size(389, 93);
+            this.ControlBox = false;
             this.Controls.Add(this.lblFilePath);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.txtFilePath);
             this.Name = "JustificatifDialog";
-            this.Text = "Ajouter Justificatif";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.TopMost = true;
             this.Load += new System.EventHandler(this.JustificatifDialog_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

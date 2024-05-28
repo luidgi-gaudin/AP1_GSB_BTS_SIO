@@ -65,12 +65,12 @@ namespace AP1_GSB_BTS_SIO
                 {
                     conn.Open();
                     string query = @"
-                SELECT f.id_fichedeFrais, f.AnneeMois, f.Etat, ff.id_fraisForfait, ff.Montant_total, tf.TypeFrai
-                FROM fichedefrais f
-                LEFT JOIN fraisforfait ff ON f.id_fichedeFrais = ff.id_fichedeFrais
-                LEFT JOIN typefrais tf ON ff.id_typeFrais = tf.id_typeFrais
-                WHERE f.id_utilisateur = @id_utilisateur
-                AND f.AnneeMois = DATE_FORMAT(NOW(), '%Y-%m')";
+        SELECT f.id_fichedeFrais, f.AnneeMois, f.Etat, ff.id_fraisForfait, ff.Montant_total, tf.TypeFrai, ff.quantite, DATE_FORMAT(ff.date_frais, '%Y-%m-%d') AS date_frais
+        FROM fichedefrais f
+        LEFT JOIN fraisforfait ff ON f.id_fichedeFrais = ff.id_fichedeFrais
+        LEFT JOIN typefrais tf ON ff.id_typeFrais = tf.id_typeFrais
+        WHERE f.id_utilisateur = @id_utilisateur
+        AND f.AnneeMois = DATE_FORMAT(NOW(), '%Y-%m')";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@id_utilisateur", visitorId);
                     MySqlDataReader reader = cmd.ExecuteReader();
@@ -80,7 +80,19 @@ namespace AP1_GSB_BTS_SIO
                         hasRows = true;
                         ListViewItem item = new ListViewItem(reader["TypeFrai"].ToString());
                         item.SubItems.Add(reader["Etat"].ToString());
+                        item.SubItems.Add(reader["quantite"].ToString());
                         item.SubItems.Add(reader["Montant_total"].ToString());
+
+                        string dateString = reader["date_frais"].ToString();
+                        if (DateTime.TryParseExact(dateString, "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out DateTime dateFrais))
+                        {
+                            item.SubItems.Add(dateFrais.ToString("dd/MM/yyyy"));
+                        }
+                        else
+                        {
+                            item.SubItems.Add("Date invalide");
+                        }
+
                         listViewForfait.Items.Add(item);
                     }
                     reader.Close();
@@ -102,11 +114,11 @@ namespace AP1_GSB_BTS_SIO
                 {
                     conn.Open();
                     string query = @"
-                SELECT f.id_fichedeFrais, f.AnneeMois, f.Etat, hf.id_fraisHorsForfait, hf.description, hf.montant
-                FROM fichedefrais f
-                LEFT JOIN fraishorsforfait hf ON f.id_fichedeFrais = hf.id_fichedeFrais
-                WHERE f.id_utilisateur = @id_utilisateur
-                AND f.AnneeMois = DATE_FORMAT(NOW(), '%Y-%m')";
+        SELECT f.id_fichedeFrais, f.AnneeMois, f.Etat, hf.id_fraisHorsForfait, hf.description, hf.montant, DATE_FORMAT(hf.date_fraishors, '%Y-%m-%d') AS date_fraishors
+        FROM fichedefrais f
+        LEFT JOIN fraishorsforfait hf ON f.id_fichedeFrais = hf.id_fichedeFrais
+        WHERE f.id_utilisateur = @id_utilisateur
+        AND f.AnneeMois = DATE_FORMAT(NOW(), '%Y-%m')";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@id_utilisateur", visitorId);
                     MySqlDataReader reader = cmd.ExecuteReader();
@@ -117,6 +129,17 @@ namespace AP1_GSB_BTS_SIO
                         ListViewItem item = new ListViewItem(reader["description"].ToString());
                         item.SubItems.Add(reader["Etat"].ToString());
                         item.SubItems.Add(reader["montant"].ToString());
+
+                        string dateString = reader["date_fraishors"].ToString();
+                        if (DateTime.TryParseExact(dateString, "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out DateTime dateFraisHors))
+                        {
+                            item.SubItems.Add(dateFraisHors.ToString("dd/MM/yyyy"));
+                        }
+                        else
+                        {
+                            item.SubItems.Add("Date invalide");
+                        }
+
                         listViewHorsForfait.Items.Add(item);
                     }
                     reader.Close();
@@ -134,6 +157,9 @@ namespace AP1_GSB_BTS_SIO
 
 
 
+
+
+
         private void btnAddForfait_Click(object sender, EventArgs e)
         {
             ForfaitDialog forfaitDialog = new ForfaitDialog();
@@ -145,14 +171,16 @@ namespace AP1_GSB_BTS_SIO
                     {
                         conn.Open();
                         string query = @"
-                            INSERT INTO fraisforfait (id_fichedeFrais, id_typeFrais, Montant_total)
+                            INSERT INTO fraisforfait (id_fichedeFrais, id_typeFrais, quantite,Montant_total, date_frais)
                             VALUES (
                                 (SELECT id_fichedeFrais FROM fichedefrais WHERE id_utilisateur = @id_utilisateur AND AnneeMois = DATE_FORMAT(NOW(), '%Y-%m')),
-                                @id_typeFrais, @Montant_total)";
+                                @id_typeFrais, @quantite,@Montant_total, @date_frais)";
                         MySqlCommand cmd = new MySqlCommand(query, conn);
                         cmd.Parameters.AddWithValue("@id_utilisateur", visitorId);
                         cmd.Parameters.AddWithValue("@id_typeFrais", forfaitDialog.IdTypeFrais);
                         cmd.Parameters.AddWithValue("@Montant_total", forfaitDialog.MontantTotal);
+                        cmd.Parameters.AddWithValue("@quantite", forfaitDialog.Quantite);
+                        cmd.Parameters.AddWithValue("@date_frais", forfaitDialog.Date_frais);
                         cmd.ExecuteNonQuery();
                         LoadCurrentExpenseReport();
                     }
@@ -175,14 +203,15 @@ namespace AP1_GSB_BTS_SIO
                     {
                         conn.Open();
                         string query = @"
-                            INSERT INTO fraishorsforfait (id_fichedeFrais, description, montant)
+                            INSERT INTO fraishorsforfait (id_fichedeFrais, description, montant, date_fraishors)
                             VALUES (
                                 (SELECT id_fichedeFrais FROM fichedefrais WHERE id_utilisateur = @id_utilisateur AND AnneeMois = DATE_FORMAT(NOW(), '%Y-%m')),
-                                @description, @montant)";
+                                @description, @montant, @date)";
                         MySqlCommand cmd = new MySqlCommand(query, conn);
                         cmd.Parameters.AddWithValue("@id_utilisateur", visitorId);
                         cmd.Parameters.AddWithValue("@description", horsForfaitDialog.Description);
                         cmd.Parameters.AddWithValue("@montant", horsForfaitDialog.Montant);
+                        cmd.Parameters.AddWithValue("@date", horsForfaitDialog.Date_frais);
                         cmd.ExecuteNonQuery();
                         LoadCurrentExpenseReport();
                     }
