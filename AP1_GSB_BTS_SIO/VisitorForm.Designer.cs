@@ -3,18 +3,6 @@
     partial class VisitorForm
     {
         private System.ComponentModel.IContainer components = null;
-        private System.Windows.Forms.Button btnAddForfait;
-        private System.Windows.Forms.Button btnAddHorsForfait;
-        private System.Windows.Forms.Button btnViewHistory;
-        private System.Windows.Forms.Button btnAddJustificatif;
-        private System.Windows.Forms.Button btnExportPDF;
-        private System.Windows.Forms.ListView listViewForfait;
-        private System.Windows.Forms.ListView listViewHorsForfait;
-        private System.Windows.Forms.Button btnLogout;
-        private System.Windows.Forms.Label lblTitleForfait;
-        private System.Windows.Forms.Label lblTitleHorsForfait;
-        private System.Windows.Forms.GroupBox groupBoxForfait;
-        private System.Windows.Forms.GroupBox groupBoxHorsForfait;
 
         protected override void Dispose(bool disposing)
         {
@@ -35,12 +23,13 @@
             this.btnExportPDF = new System.Windows.Forms.Button();
             this.listViewForfait = new System.Windows.Forms.ListView();
             this.listViewHorsForfait = new System.Windows.Forms.ListView();
-            this.btnLogout = new System.Windows.Forms.Button();
             this.lblTitleForfait = new System.Windows.Forms.Label();
             this.lblTitleHorsForfait = new System.Windows.Forms.Label();
             this.groupBoxForfait = new System.Windows.Forms.GroupBox();
             this.groupBoxHorsForfait = new System.Windows.Forms.GroupBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btnLogoutV = new System.Windows.Forms.Button();
             this.groupBoxForfait.SuspendLayout();
             this.groupBoxHorsForfait.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -48,7 +37,7 @@
             // 
             // btnAddForfait
             // 
-            this.btnAddForfait.Location = new System.Drawing.Point(451, 14);
+            this.btnAddForfait.Location = new System.Drawing.Point(587, 14);
             this.btnAddForfait.Name = "btnAddForfait";
             this.btnAddForfait.Size = new System.Drawing.Size(155, 28);
             this.btnAddForfait.TabIndex = 0;
@@ -58,7 +47,7 @@
             // 
             // btnAddHorsForfait
             // 
-            this.btnAddHorsForfait.Location = new System.Drawing.Point(420, 13);
+            this.btnAddHorsForfait.Location = new System.Drawing.Point(565, 13);
             this.btnAddHorsForfait.Name = "btnAddHorsForfait";
             this.btnAddHorsForfait.Size = new System.Drawing.Size(186, 29);
             this.btnAddHorsForfait.TabIndex = 1;
@@ -68,7 +57,7 @@
             // 
             // btnViewHistory
             // 
-            this.btnViewHistory.Location = new System.Drawing.Point(700, 214);
+            this.btnViewHistory.Location = new System.Drawing.Point(836, 199);
             this.btnViewHistory.Name = "btnViewHistory";
             this.btnViewHistory.Size = new System.Drawing.Size(164, 68);
             this.btnViewHistory.TabIndex = 3;
@@ -78,7 +67,7 @@
             // 
             // btnAddJustificatif
             // 
-            this.btnAddJustificatif.Location = new System.Drawing.Point(700, 288);
+            this.btnAddJustificatif.Location = new System.Drawing.Point(836, 288);
             this.btnAddJustificatif.Name = "btnAddJustificatif";
             this.btnAddJustificatif.Size = new System.Drawing.Size(164, 77);
             this.btnAddJustificatif.TabIndex = 4;
@@ -91,55 +80,34 @@
             this.btnExportPDF.BackColor = System.Drawing.Color.IndianRed;
             this.btnExportPDF.FlatAppearance.BorderColor = System.Drawing.Color.IndianRed;
             this.btnExportPDF.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.btnExportPDF.Location = new System.Drawing.Point(700, 371);
+            this.btnExportPDF.Location = new System.Drawing.Point(836, 393);
             this.btnExportPDF.Name = "btnExportPDF";
             this.btnExportPDF.Size = new System.Drawing.Size(164, 67);
             this.btnExportPDF.TabIndex = 5;
             this.btnExportPDF.Text = "Exporter en PDF";
             this.btnExportPDF.UseVisualStyleBackColor = false;
             this.btnExportPDF.Click += new System.EventHandler(this.btnExportPDF_Click);
-            this.listViewForfait.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-        new System.Windows.Forms.ColumnHeader() { Text = "Type Frais", Width = 150 },
-        new System.Windows.Forms.ColumnHeader() { Text = "Etat", Width = 100 },
-        new System.Windows.Forms.ColumnHeader() { Text = "Quantitée", Width = 100 },
-        new System.Windows.Forms.ColumnHeader() { Text = "Montant Total", Width = 100 },
-        new System.Windows.Forms.ColumnHeader() { Text = "Date", Width = 100 },
-    });
+            // 
+            // listViewForfait
+            // 
             this.listViewForfait.HideSelection = false;
             this.listViewForfait.Location = new System.Drawing.Point(6, 48);
             this.listViewForfait.Name = "listViewForfait";
-            this.listViewForfait.Size = new System.Drawing.Size(600, 150);
+            this.listViewForfait.Size = new System.Drawing.Size(745, 150);
             this.listViewForfait.TabIndex = 6;
             this.listViewForfait.UseCompatibleStateImageBehavior = false;
             this.listViewForfait.View = System.Windows.Forms.View.Details;
             this.listViewForfait.SelectedIndexChanged += new System.EventHandler(this.listViewForfait_SelectedIndexChanged);
-
             // 
             // listViewHorsForfait
             // 
-            this.listViewHorsForfait.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-        new System.Windows.Forms.ColumnHeader() { Text = "Description", Width = 150 },
-        new System.Windows.Forms.ColumnHeader() { Text = "Etat", Width = 100 },
-        new System.Windows.Forms.ColumnHeader() { Text = "Montant", Width = 100 },
-        new System.Windows.Forms.ColumnHeader() { Text = "Date", Width = 100 },
-    });
             this.listViewHorsForfait.HideSelection = false;
             this.listViewHorsForfait.Location = new System.Drawing.Point(6, 48);
             this.listViewHorsForfait.Name = "listViewHorsForfait";
-            this.listViewHorsForfait.Size = new System.Drawing.Size(600, 150);
+            this.listViewHorsForfait.Size = new System.Drawing.Size(747, 150);
             this.listViewHorsForfait.TabIndex = 7;
             this.listViewHorsForfait.UseCompatibleStateImageBehavior = false;
             this.listViewHorsForfait.View = System.Windows.Forms.View.Details;
-            // 
-            // btnLogout
-            // 
-            this.btnLogout.Location = new System.Drawing.Point(12, 415);
-            this.btnLogout.Name = "btnLogout";
-            this.btnLogout.Size = new System.Drawing.Size(100, 23);
-            this.btnLogout.TabIndex = 8;
-            this.btnLogout.Text = "Déconnexion";
-            this.btnLogout.UseVisualStyleBackColor = true;
-            this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
             // 
             // lblTitleForfait
             // 
@@ -164,9 +132,9 @@
             this.groupBoxForfait.Controls.Add(this.btnAddForfait);
             this.groupBoxForfait.Controls.Add(this.listViewForfait);
             this.groupBoxForfait.Controls.Add(this.lblTitleForfait);
-            this.groupBoxForfait.Location = new System.Drawing.Point(12, 12);
+            this.groupBoxForfait.Location = new System.Drawing.Point(12, 71);
             this.groupBoxForfait.Name = "groupBoxForfait";
-            this.groupBoxForfait.Size = new System.Drawing.Size(612, 222);
+            this.groupBoxForfait.Size = new System.Drawing.Size(757, 222);
             this.groupBoxForfait.TabIndex = 11;
             this.groupBoxForfait.TabStop = false;
             // 
@@ -175,29 +143,53 @@
             this.groupBoxHorsForfait.Controls.Add(this.btnAddHorsForfait);
             this.groupBoxHorsForfait.Controls.Add(this.listViewHorsForfait);
             this.groupBoxHorsForfait.Controls.Add(this.lblTitleHorsForfait);
-            this.groupBoxHorsForfait.Location = new System.Drawing.Point(12, 240);
+            this.groupBoxHorsForfait.Location = new System.Drawing.Point(12, 299);
             this.groupBoxHorsForfait.Name = "groupBoxHorsForfait";
-            this.groupBoxHorsForfait.Size = new System.Drawing.Size(612, 215);
+            this.groupBoxHorsForfait.Size = new System.Drawing.Size(757, 215);
             this.groupBoxHorsForfait.TabIndex = 12;
             this.groupBoxHorsForfait.TabStop = false;
             // 
             // pictureBox1
             // 
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(674, 12);
+            this.pictureBox1.Location = new System.Drawing.Point(798, 25);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(202, 109);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 13;
             this.pictureBox1.TabStop = false;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(420, 2);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(231, 69);
+            this.label1.TabIndex = 14;
+            this.label1.Text = "Visiteur";
+            // 
+            // btnLogoutV
+            // 
+            this.btnLogoutV.BackColor = System.Drawing.Color.IndianRed;
+            this.btnLogoutV.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.btnLogoutV.Location = new System.Drawing.Point(12, 12);
+            this.btnLogoutV.Name = "btnLogoutV";
+            this.btnLogoutV.Size = new System.Drawing.Size(173, 33);
+            this.btnLogoutV.TabIndex = 15;
+            this.btnLogoutV.Text = "Déconnexion";
+            this.btnLogoutV.UseVisualStyleBackColor = false;
+            this.btnLogoutV.Click += new System.EventHandler(this.btnLogoutV_Click);
+            // 
             // VisitorForm
             // 
-            this.ClientSize = new System.Drawing.Size(913, 462);
+            this.ClientSize = new System.Drawing.Size(1055, 526);
+            this.ControlBox = false;
+            this.Controls.Add(this.btnLogoutV);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.groupBoxHorsForfait);
             this.Controls.Add(this.groupBoxForfait);
-            this.Controls.Add(this.btnLogout);
             this.Controls.Add(this.btnExportPDF);
             this.Controls.Add(this.btnAddJustificatif);
             this.Controls.Add(this.btnViewHistory);
@@ -205,7 +197,6 @@
             this.Name = "VisitorForm";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "VISITEUR";
             this.Load += new System.EventHandler(this.VisitorForm_Load);
             this.groupBoxForfait.ResumeLayout(false);
             this.groupBoxForfait.PerformLayout();
@@ -213,9 +204,23 @@
             this.groupBoxHorsForfait.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
+        private System.Windows.Forms.Button btnAddForfait;
+        private System.Windows.Forms.Button btnAddHorsForfait;
+        private System.Windows.Forms.Button btnViewHistory;
+        private System.Windows.Forms.Button btnAddJustificatif;
+        private System.Windows.Forms.Button btnExportPDF;
+        private System.Windows.Forms.ListView listViewForfait;
+        private System.Windows.Forms.ListView listViewHorsForfait;
+        private System.Windows.Forms.Label lblTitleForfait;
+        private System.Windows.Forms.Label lblTitleHorsForfait;
+        private System.Windows.Forms.GroupBox groupBoxForfait;
+        private System.Windows.Forms.GroupBox groupBoxHorsForfait;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button btnLogoutV;
     }
 }

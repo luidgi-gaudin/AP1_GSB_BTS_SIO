@@ -11,6 +11,8 @@ namespace AP1_GSB_BTS_SIO
         public AdminForm()
         {
             InitializeComponent();
+            listViewUsers.View = View.Details;
+            listViewTypes.View = View.Details;
         }
 
         private void AdminForm_Load(object sender, EventArgs e)

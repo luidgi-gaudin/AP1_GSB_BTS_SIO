@@ -435,13 +435,12 @@ namespace AP1_GSB_BTS_SIO
         {
         }
 
-
-
-
-        private void btnLogout_Click(object sender, EventArgs e)
+        private void btnLogoutV_Click(object sender, EventArgs e)
         {
+            this.Hide();
+            Form1 loginForm = new Form1();
+            loginForm.ShowDialog();
             this.Close();
         }
-
     }
 }
