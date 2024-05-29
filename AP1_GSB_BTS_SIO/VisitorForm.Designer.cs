@@ -5,7 +5,6 @@
         private System.ComponentModel.IContainer components = null;
         private System.Windows.Forms.Button btnAddForfait;
         private System.Windows.Forms.Button btnAddHorsForfait;
-        private System.Windows.Forms.Button btnViewCurrent;
         private System.Windows.Forms.Button btnViewHistory;
         private System.Windows.Forms.Button btnAddJustificatif;
         private System.Windows.Forms.Button btnExportPDF;
@@ -31,7 +30,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(VisitorForm));
             this.btnAddForfait = new System.Windows.Forms.Button();
             this.btnAddHorsForfait = new System.Windows.Forms.Button();
-            this.btnViewCurrent = new System.Windows.Forms.Button();
             this.btnViewHistory = new System.Windows.Forms.Button();
             this.btnAddJustificatif = new System.Windows.Forms.Button();
             this.btnExportPDF = new System.Windows.Forms.Button();
@@ -68,16 +66,6 @@
             this.btnAddHorsForfait.UseVisualStyleBackColor = true;
             this.btnAddHorsForfait.Click += new System.EventHandler(this.btnAddHorsForfait_Click);
             // 
-            // btnViewCurrent
-            // 
-            this.btnViewCurrent.Location = new System.Drawing.Point(700, 127);
-            this.btnViewCurrent.Name = "btnViewCurrent";
-            this.btnViewCurrent.Size = new System.Drawing.Size(164, 81);
-            this.btnViewCurrent.TabIndex = 2;
-            this.btnViewCurrent.Text = "Fiche en cours";
-            this.btnViewCurrent.UseVisualStyleBackColor = true;
-            this.btnViewCurrent.Click += new System.EventHandler(this.btnViewCurrent_Click);
-            // 
             // btnViewHistory
             // 
             this.btnViewHistory.Location = new System.Drawing.Point(700, 214);
@@ -86,7 +74,7 @@
             this.btnViewHistory.TabIndex = 3;
             this.btnViewHistory.Text = "Historique";
             this.btnViewHistory.UseVisualStyleBackColor = true;
-            this.btnViewHistory.Click += new System.EventHandler(this.btnViewHistory_Click);
+            this.btnViewHistory.Click += new System.EventHandler(this.BtnViewHistory_Click);
             // 
             // btnAddJustificatif
             // 
@@ -213,7 +201,6 @@
             this.Controls.Add(this.btnExportPDF);
             this.Controls.Add(this.btnAddJustificatif);
             this.Controls.Add(this.btnViewHistory);
-            this.Controls.Add(this.btnViewCurrent);
             this.MaximizeBox = false;
             this.Name = "VisitorForm";
             this.ShowIcon = false;

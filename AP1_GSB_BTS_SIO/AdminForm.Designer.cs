@@ -3,8 +3,8 @@
     partial class AdminForm
     {
         private System.ComponentModel.IContainer components = null;
-        private System.Windows.Forms.ListBox listBoxUsers;
-        private System.Windows.Forms.ListBox listBoxTypes;
+        private System.Windows.Forms.ListView listViewUsers;
+        private System.Windows.Forms.ListView listViewTypes;
         private System.Windows.Forms.Button btnAddUser;
         private System.Windows.Forms.Button btnEditUser;
         private System.Windows.Forms.Button btnDeleteUser;
@@ -23,8 +23,8 @@
 
         private void InitializeComponent()
         {
-            this.listBoxUsers = new System.Windows.Forms.ListBox();
-            this.listBoxTypes = new System.Windows.Forms.ListBox();
+            this.listViewUsers = new System.Windows.Forms.ListView();
+            this.listViewTypes = new System.Windows.Forms.ListView();
             this.btnAddUser = new System.Windows.Forms.Button();
             this.btnEditUser = new System.Windows.Forms.Button();
             this.btnDeleteUser = new System.Windows.Forms.Button();
@@ -33,27 +33,45 @@
             this.btnLogout = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // listBoxUsers
+            // listViewUsers
             // 
-            this.listBoxUsers.FormattingEnabled = true;
-            this.listBoxUsers.ItemHeight = 20;
-            this.listBoxUsers.Location = new System.Drawing.Point(13, 53);
-            this.listBoxUsers.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.listBoxUsers.Name = "listBoxUsers";
-            this.listBoxUsers.Size = new System.Drawing.Size(388, 504);
-            this.listBoxUsers.TabIndex = 0;
-            this.listBoxUsers.DoubleClick += new System.EventHandler(this.listBoxUsers_DoubleClick);
+            this.listViewUsers.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+        new System.Windows.Forms.ColumnHeader { Text = "ID" },
+        new System.Windows.Forms.ColumnHeader { Text = "Nom" },
+        new System.Windows.Forms.ColumnHeader { Text = "Prénom" },
+        new System.Windows.Forms.ColumnHeader { Text = "Email" },
+        new System.Windows.Forms.ColumnHeader { Text = "Role" }
+    });
+            this.listViewUsers.FullRowSelect = true;
+            this.listViewUsers.GridLines = true;
+            this.listViewUsers.HideSelection = false;
+            this.listViewUsers.Location = new System.Drawing.Point(13, 53);
+            this.listViewUsers.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.listViewUsers.Name = "listViewUsers";
+            this.listViewUsers.Size = new System.Drawing.Size(388, 504);
+            this.listViewUsers.TabIndex = 0;
+            this.listViewUsers.UseCompatibleStateImageBehavior = false;
+            this.listViewUsers.View = System.Windows.Forms.View.Details;
+            this.listViewUsers.DoubleClick += new System.EventHandler(this.listViewUsers_DoubleClick);
             // 
-            // listBoxTypes
+            // listViewTypes
             // 
-            this.listBoxTypes.FormattingEnabled = true;
-            this.listBoxTypes.ItemHeight = 20;
-            this.listBoxTypes.Location = new System.Drawing.Point(417, 53);
-            this.listBoxTypes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.listBoxTypes.Name = "listBoxTypes";
-            this.listBoxTypes.Size = new System.Drawing.Size(388, 504);
-            this.listBoxTypes.TabIndex = 1;
-            this.listBoxTypes.DoubleClick += new System.EventHandler(this.listBoxTypes_DoubleClick);
+            this.listViewTypes.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+        new System.Windows.Forms.ColumnHeader { Text = "ID" },
+        new System.Windows.Forms.ColumnHeader { Text = "Type" },
+        new System.Windows.Forms.ColumnHeader { Text = "Montant" }
+    });
+            this.listViewTypes.FullRowSelect = true;
+            this.listViewTypes.GridLines = true;
+            this.listViewTypes.HideSelection = false;
+            this.listViewTypes.Location = new System.Drawing.Point(417, 53);
+            this.listViewTypes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.listViewTypes.Name = "listViewTypes";
+            this.listViewTypes.Size = new System.Drawing.Size(388, 504);
+            this.listViewTypes.TabIndex = 1;
+            this.listViewTypes.UseCompatibleStateImageBehavior = false;
+            this.listViewTypes.View = System.Windows.Forms.View.Details;
+            this.listViewTypes.DoubleClick += new System.EventHandler(this.listViewTypes_DoubleClick);
             // 
             // btnAddUser
             // 
@@ -134,17 +152,16 @@
             this.Controls.Add(this.btnDeleteUser);
             this.Controls.Add(this.btnEditUser);
             this.Controls.Add(this.btnAddUser);
-            this.Controls.Add(this.listBoxTypes);
-            this.Controls.Add(this.listBoxUsers);
+            this.Controls.Add(this.listViewTypes);
+            this.Controls.Add(this.listViewUsers);
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MaximizeBox = false;
             this.Name = "AdminForm";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Panneau d\'administration";
+            this.Text = "Panneau d'administration";
             this.Load += new System.EventHandler(this.AdminForm_Load);
             this.ResumeLayout(false);
-
         }
     }
 }

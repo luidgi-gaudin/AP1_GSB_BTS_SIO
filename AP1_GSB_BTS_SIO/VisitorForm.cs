@@ -1,10 +1,9 @@
-﻿using System;
-using System.Data;
+﻿using iTextSharp.text;
+using iTextSharp.text.pdf;
+using MySql.Data.MySqlClient;
+using System;
 using System.IO;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
 
 namespace AP1_GSB_BTS_SIO
 {
@@ -257,44 +256,15 @@ namespace AP1_GSB_BTS_SIO
             }
         }
 
-        private void btnViewCurrent_Click(object sender, EventArgs e)
-        {
-            LoadCurrentExpenseReport();
-        }
 
-        private void btnViewHistory_Click(object sender, EventArgs e)
+        private void BtnViewHistory_Click(object sender, EventArgs e)
         {
-            listViewForfait.Items.Clear();
-            listViewHorsForfait.Items.Clear();
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            using (HistoryForm historyForm = new HistoryForm(visitorId))
             {
-                try
-                {
-                    conn.Open();
-                    string query = @"
-                        SELECT f.AnneeMois, f.Etat, hf.description, hf.montant
-                        FROM fichedefrais f
-                        LEFT JOIN fraishorsforfait hf ON f.id_fichedeFrais = hf.id_fichedeFrais
-                        WHERE f.id_utilisateur = @id_utilisateur
-                        ORDER BY f.AnneeMois DESC";
-                    MySqlCommand cmd = new MySqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@id_utilisateur", visitorId);
-                    MySqlDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        ListViewItem item = new ListViewItem(reader["description"].ToString());
-                        item.SubItems.Add(reader["Etat"].ToString());
-                        item.SubItems.Add(reader["montant"].ToString());
-                        item.SubItems.Add(reader["AnneeMois"].ToString());
-                        listViewHorsForfait.Items.Add(item);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error: " + ex.Message);
-                }
+                historyForm.ShowDialog();
             }
         }
+
 
         private void btnExportPDF_Click(object sender, EventArgs e)
         {

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;
 
 namespace AP1_GSB_BTS_SIO
 {
@@ -21,7 +21,7 @@ namespace AP1_GSB_BTS_SIO
 
         private void LoadUsers()
         {
-            listBoxUsers.Items.Clear();
+            listViewUsers.Items.Clear();
             using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
                 try
@@ -35,8 +35,12 @@ namespace AP1_GSB_BTS_SIO
                     MySqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        string userInfo = $"{reader["id_utilisateur"]}, {reader["nom"]} {reader["prenom"]}, {reader["email"]}, {reader["role"]}";
-                        listBoxUsers.Items.Add(userInfo);
+                        ListViewItem item = new ListViewItem(reader["id_utilisateur"].ToString());
+                        item.SubItems.Add(reader["nom"].ToString());
+                        item.SubItems.Add(reader["prenom"].ToString());
+                        item.SubItems.Add(reader["email"].ToString());
+                        item.SubItems.Add(reader["role"].ToString());
+                        listViewUsers.Items.Add(item);
                     }
                 }
                 catch (Exception ex)
@@ -48,7 +52,7 @@ namespace AP1_GSB_BTS_SIO
 
         private void LoadTypes()
         {
-            listBoxTypes.Items.Clear();
+            listViewTypes.Items.Clear();
             using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
                 try
@@ -58,8 +62,10 @@ namespace AP1_GSB_BTS_SIO
                     MySqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        string typeInfo = $"{reader["id_typeFrais"]}, {reader["TypeFrai"]}, {reader["montant"]}";
-                        listBoxTypes.Items.Add(typeInfo);
+                        ListViewItem item = new ListViewItem(reader["id_typeFrais"].ToString());
+                        item.SubItems.Add(reader["TypeFrai"].ToString());
+                        item.SubItems.Add(reader["montant"].ToString());
+                        listViewTypes.Items.Add(item);
                     }
                 }
                 catch (Exception ex)
@@ -99,65 +105,49 @@ namespace AP1_GSB_BTS_SIO
 
         private void btnEditUser_Click(object sender, EventArgs e)
         {
-            if (listBoxUsers.SelectedItem != null)
+            if (listViewUsers.SelectedItems.Count > 0)
             {
-                string selectedUser = listBoxUsers.SelectedItem.ToString();
-                string[] userDetails = selectedUser.Split(',');
+                ListViewItem selectedItem = listViewUsers.SelectedItems[0];
+                string id = selectedItem.SubItems[0].Text;
+                string nom = selectedItem.SubItems[1].Text;
+                string prenom = selectedItem.SubItems[2].Text;
+                string email = selectedItem.SubItems[3].Text;
+                string role = selectedItem.SubItems[4].Text;
 
-                if (userDetails.Length >= 4) // Vérifiez que tous les éléments nécessaires sont présents
+                UserDialog userDialog = new UserDialog();
+                userDialog.LoadUser(nom, prenom, email, role);
+
+                if (userDialog.ShowDialog() == DialogResult.OK)
                 {
-                    string[] nameParts = userDetails[1].Trim().Split(' ');
-                    if (nameParts.Length >= 2)
+                    using (MySqlConnection conn = new MySqlConnection(connectionString))
                     {
-                        string nom = nameParts[0];
-                        string prenom = nameParts[1];
-                        string email = userDetails[2].Trim();
-                        string role = userDetails[3].Trim();
-
-                        UserDialog userDialog = new UserDialog();
-                        userDialog.LoadUser(nom, prenom, email, role);
-
-                        if (userDialog.ShowDialog() == DialogResult.OK)
+                        try
                         {
-                            using (MySqlConnection conn = new MySqlConnection(connectionString))
+                            conn.Open();
+                            string query = "UPDATE Utilisateur SET nom=@nom, prenom=@prenom, email=@email, id_role=@id_role";
+                            if (!string.IsNullOrEmpty(userDialog.UserPassword))
                             {
-                                try
-                                {
-                                    conn.Open();
-                                    string query = "UPDATE Utilisateur SET nom=@nom, prenom=@prenom, email=@email, id_role=@id_role";
-                                    if (!string.IsNullOrEmpty(userDialog.UserPassword))
-                                    {
-                                        query += ", motdepasse=@motdepasse";
-                                    }
-                                    query += " WHERE id_utilisateur=@id_utilisateur";
-                                    MySqlCommand cmd = new MySqlCommand(query, conn);
-                                    cmd.Parameters.AddWithValue("@nom", userDialog.UserName);
-                                    cmd.Parameters.AddWithValue("@prenom", userDialog.UserSurname);
-                                    cmd.Parameters.AddWithValue("@email", userDialog.UserEmail);
-                                    cmd.Parameters.AddWithValue("@id_role", userDialog.UserRole);
-                                    if (!string.IsNullOrEmpty(userDialog.UserPassword))
-                                    {
-                                        cmd.Parameters.AddWithValue("@motdepasse", userDialog.UserPassword);
-                                    }
-                                    cmd.Parameters.AddWithValue("@id_utilisateur", int.Parse(userDetails[0].Trim()));
-                                    cmd.ExecuteNonQuery();
-                                    LoadUsers();
-                                }
-                                catch (Exception ex)
-                                {
-                                    MessageBox.Show("Error: " + ex.Message);
-                                }
+                                query += ", motdepasse=@motdepasse";
                             }
+                            query += " WHERE id_utilisateur=@id_utilisateur";
+                            MySqlCommand cmd = new MySqlCommand(query, conn);
+                            cmd.Parameters.AddWithValue("@nom", userDialog.UserName);
+                            cmd.Parameters.AddWithValue("@prenom", userDialog.UserSurname);
+                            cmd.Parameters.AddWithValue("@email", userDialog.UserEmail);
+                            cmd.Parameters.AddWithValue("@id_role", userDialog.UserRole);
+                            if (!string.IsNullOrEmpty(userDialog.UserPassword))
+                            {
+                                cmd.Parameters.AddWithValue("@motdepasse", userDialog.UserPassword);
+                            }
+                            cmd.Parameters.AddWithValue("@id_utilisateur", int.Parse(id));
+                            cmd.ExecuteNonQuery();
+                            LoadUsers();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Error: " + ex.Message);
                         }
                     }
-                    else
-                    {
-                        MessageBox.Show("Erreur lors de la récupération des détails de l'utilisateur.");
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Erreur lors de la récupération des détails de l'utilisateur.");
                 }
             }
             else
@@ -168,35 +158,28 @@ namespace AP1_GSB_BTS_SIO
 
         private void btnDeleteUser_Click(object sender, EventArgs e)
         {
-            if (listBoxUsers.SelectedItem != null)
+            if (listViewUsers.SelectedItems.Count > 0)
             {
                 if (MessageBox.Show("Êtes-vous sûr de vouloir supprimer cet utilisateur ?", "Confirmation", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    string selectedUser = listBoxUsers.SelectedItem.ToString();
-                    string[] userDetails = selectedUser.Split(',');
+                    ListViewItem selectedItem = listViewUsers.SelectedItems[0];
+                    string id = selectedItem.SubItems[0].Text;
 
-                    if (userDetails.Length > 0)
+                    using (MySqlConnection conn = new MySqlConnection(connectionString))
                     {
-                        using (MySqlConnection conn = new MySqlConnection(connectionString))
+                        try
                         {
-                            try
-                            {
-                                conn.Open();
-                                string query = "DELETE FROM Utilisateur WHERE id_utilisateur=@id_utilisateur";
-                                MySqlCommand cmd = new MySqlCommand(query, conn);
-                                cmd.Parameters.AddWithValue("@id_utilisateur", int.Parse(userDetails[0]));
-                                cmd.ExecuteNonQuery();
-                                LoadUsers();
-                            }
-                            catch (Exception ex)
-                            {
-                                MessageBox.Show("Error: " + ex.Message);
-                            }
+                            conn.Open();
+                            string query = "DELETE FROM Utilisateur WHERE id_utilisateur=@id_utilisateur";
+                            MySqlCommand cmd = new MySqlCommand(query, conn);
+                            cmd.Parameters.AddWithValue("@id_utilisateur", int.Parse(id));
+                            cmd.ExecuteNonQuery();
+                            LoadUsers();
                         }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Erreur lors de la récupération des détails de l'utilisateur.");
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Error: " + ex.Message);
+                        }
                     }
                 }
             }
@@ -233,48 +216,43 @@ namespace AP1_GSB_BTS_SIO
 
         private void btnEditType_Click(object sender, EventArgs e)
         {
-            if (listBoxTypes.SelectedItem != null)
+            if (listViewTypes.SelectedItems.Count > 0)
             {
-                string selectedType = listBoxTypes.SelectedItem.ToString();
-                string[] typeDetails = selectedType.Split(',');
+                ListViewItem selectedItem = listViewTypes.SelectedItems[0];
+                string id = selectedItem.SubItems[0].Text;
+                string type = selectedItem.SubItems[1].Text;
+                string montant = selectedItem.SubItems[2].Text;
 
-                if (typeDetails.Length >= 3) // Vérifiez que tous les éléments nécessaires sont présents
+                if (decimal.TryParse(montant, out decimal amount))
                 {
                     TypeDialog typeDialog = new TypeDialog();
-                    if (decimal.TryParse(typeDetails[2].Trim(), out decimal amount))
-                    {
-                        typeDialog.LoadType(typeDetails[1].Trim(), amount);
+                    typeDialog.LoadType(type, amount);
 
-                        if (typeDialog.ShowDialog() == DialogResult.OK)
+                    if (typeDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        using (MySqlConnection conn = new MySqlConnection(connectionString))
                         {
-                            using (MySqlConnection conn = new MySqlConnection(connectionString))
+                            try
                             {
-                                try
-                                {
-                                    conn.Open();
-                                    string query = "UPDATE TypeFrais SET TypeFrai=@TypeFrai, montant=@montant WHERE id_typeFrais=@id_typeFrais";
-                                    MySqlCommand cmd = new MySqlCommand(query, conn);
-                                    cmd.Parameters.AddWithValue("@TypeFrai", typeDialog.TypeName);
-                                    cmd.Parameters.AddWithValue("@montant", typeDialog.TypeAmount);
-                                    cmd.Parameters.AddWithValue("@id_typeFrais", int.Parse(typeDetails[0]));
-                                    cmd.ExecuteNonQuery();
-                                    LoadTypes();
-                                }
-                                catch (Exception ex)
-                                {
-                                    MessageBox.Show("Error: " + ex.Message);
-                                }
+                                conn.Open();
+                                string query = "UPDATE TypeFrais SET TypeFrai=@TypeFrai, montant=@montant WHERE id_typeFrais=@id_typeFrais";
+                                MySqlCommand cmd = new MySqlCommand(query, conn);
+                                cmd.Parameters.AddWithValue("@TypeFrai", typeDialog.TypeName);
+                                cmd.Parameters.AddWithValue("@montant", typeDialog.TypeAmount);
+                                cmd.Parameters.AddWithValue("@id_typeFrais", int.Parse(id));
+                                cmd.ExecuteNonQuery();
+                                LoadTypes();
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show("Error: " + ex.Message);
                             }
                         }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Erreur lors de la conversion du montant.");
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Erreur lors de la récupération des détails du type de frais.");
+                    MessageBox.Show("Erreur lors de la conversion du montant.");
                 }
             }
             else
@@ -283,12 +261,12 @@ namespace AP1_GSB_BTS_SIO
             }
         }
 
-        private void listBoxUsers_DoubleClick(object sender, EventArgs e)
+        private void listViewUsers_DoubleClick(object sender, EventArgs e)
         {
             btnEditUser_Click(sender, e);
         }
 
-        private void listBoxTypes_DoubleClick(object sender, EventArgs e)
+        private void listViewTypes_DoubleClick(object sender, EventArgs e)
         {
             btnEditType_Click(sender, e);
         }

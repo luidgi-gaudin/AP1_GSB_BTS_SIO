@@ -31,7 +31,6 @@
             // 
             // txtEmail
             // 
-            this.txtEmail.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.txtEmail.Location = new System.Drawing.Point(22, 191);
             this.txtEmail.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtEmail.Name = "txtEmail";
@@ -41,7 +40,6 @@
             // txtPassword
             // 
             this.txtPassword.AccessibleName = "";
-            this.txtPassword.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.txtPassword.Location = new System.Drawing.Point(22, 257);
             this.txtPassword.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtPassword.Name = "txtPassword";

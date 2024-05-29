@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;
 
 
 namespace AP1_GSB_BTS_SIO
@@ -19,39 +11,6 @@ namespace AP1_GSB_BTS_SIO
         public Form1()
         {
             InitializeComponent();
-        }
-
-        private UserInfo IsLoginValid(string username, string password)
-        {
-            UserInfo userInfo = new UserInfo { IsValid = false };
-
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
-            {
-                try
-                {
-                    conn.Open();
-                    string query = "SELECT id_utilisateur, id_role FROM Utilisateur WHERE nom=@username AND motdepasse=@password";
-                    MySqlCommand cmd = new MySqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@username", username);
-                    cmd.Parameters.AddWithValue("@password", password);
-
-                    using (MySqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            userInfo.IsValid = true;
-                            userInfo.UserId = reader.GetInt32(0);
-                            userInfo.RoleId = reader.GetInt32(1);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error: " + ex.Message);
-                }
-            }
-
-            return userInfo;
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -122,15 +81,6 @@ namespace AP1_GSB_BTS_SIO
         {
 
         }
-    }
-
-
-
-    public class UserInfo
-    {
-        public bool IsValid { get; set; }
-        public int UserId { get; set; }
-        public int RoleId { get; set; }
     }
 
 }
