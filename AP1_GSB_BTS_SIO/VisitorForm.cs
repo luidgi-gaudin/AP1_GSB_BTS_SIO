@@ -32,8 +32,8 @@ namespace AP1_GSB_BTS_SIO
                 {
                     conn.Open();
                     string query = @"
-                        INSERT INTO fichedefrais (id_utilisateur, AnneeMois, Montant, Etat, id_etat)
-                        SELECT @id_utilisateur, DATE_FORMAT(NOW(), '%Y-%m'), 0, 'EN COURS', 1
+                        INSERT INTO fichedefrais (id_utilisateur, AnneeMois, Montant, id_etat)
+                        SELECT @id_utilisateur, DATE_FORMAT(NOW(), '%Y-%m'), 0,  1
                         FROM DUAL
                         WHERE NOT EXISTS (
                             SELECT 1
@@ -64,10 +64,11 @@ namespace AP1_GSB_BTS_SIO
                 {
                     conn.Open();
                     string query = @"
-        SELECT f.id_fichedeFrais, f.AnneeMois, f.Etat, ff.id_fraisForfait, ff.Montant_total, tf.TypeFrai, ff.quantite, DATE_FORMAT(ff.date_frais, '%Y-%m-%d') AS date_frais
+        SELECT f.id_fichedeFrais, f.AnneeMois, e.etat, ff.id_fraisForfait, ff.Montant_total, tf.TypeFrai, ff.quantite, DATE_FORMAT(ff.date_frais, '%Y-%m-%d') AS date_frais
         FROM fichedefrais f
         LEFT JOIN fraisforfait ff ON f.id_fichedeFrais = ff.id_fichedeFrais
         LEFT JOIN typefrais tf ON ff.id_typeFrais = tf.id_typeFrais
+LEFT JOIN etat e ON e.id_etat = f.id_etat
         WHERE f.id_utilisateur = @id_utilisateur
         AND f.AnneeMois = DATE_FORMAT(NOW(), '%Y-%m')";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
@@ -78,7 +79,7 @@ namespace AP1_GSB_BTS_SIO
                     {
                         hasRows = true;
                         ListViewItem item = new ListViewItem(reader["TypeFrai"].ToString());
-                        item.SubItems.Add(reader["Etat"].ToString());
+                        item.SubItems.Add(reader["etat"].ToString());
                         item.SubItems.Add(reader["quantite"].ToString());
                         item.SubItems.Add(reader["Montant_total"].ToString());
 
@@ -113,9 +114,10 @@ namespace AP1_GSB_BTS_SIO
                 {
                     conn.Open();
                     string query = @"
-        SELECT f.id_fichedeFrais, f.AnneeMois, f.Etat, hf.id_fraisHorsForfait, hf.description, hf.montant, DATE_FORMAT(hf.date_fraishors, '%Y-%m-%d') AS date_fraishors
+        SELECT f.id_fichedeFrais, f.AnneeMois, e.etat, hf.id_fraisHorsForfait, hf.description, hf.montant, DATE_FORMAT(hf.date_fraishors, '%Y-%m-%d') AS date_fraishors
         FROM fichedefrais f
         LEFT JOIN fraishorsforfait hf ON f.id_fichedeFrais = hf.id_fichedeFrais
+        LEFT JOIN etat e ON e.id_etat = f.id_etat
         WHERE f.id_utilisateur = @id_utilisateur
         AND f.AnneeMois = DATE_FORMAT(NOW(), '%Y-%m')";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
@@ -126,7 +128,7 @@ namespace AP1_GSB_BTS_SIO
                     {
                         hasRows = true;
                         ListViewItem item = new ListViewItem(reader["description"].ToString());
-                        item.SubItems.Add(reader["Etat"].ToString());
+                        item.SubItems.Add(reader["etat"].ToString());
                         item.SubItems.Add(reader["montant"].ToString());
 
                         string dateString = reader["date_fraishors"].ToString();
@@ -288,9 +290,10 @@ namespace AP1_GSB_BTS_SIO
                     conn.Open();
                     // Retrieve user information
                     string userInfoQuery = @"
-        SELECT u.nom, u.prenom, f.AnneeMois, f.Etat
+        SELECT u.nom, u.prenom, f.AnneeMois, e.etat
         FROM fichedefrais f
-        JOIN utilisateur u ON f.id_utilisateur = u.id_utilisateur
+        LEFT JOIN etat e ON f.id_etat = e.id_etat
+        LEFT JOIN utilisateur u ON f.id_utilisateur = u.id_utilisateur
         WHERE f.id_utilisateur = @id_utilisateur
         AND f.AnneeMois = DATE_FORMAT(NOW(), '%Y-%m')";
                     MySqlCommand userInfoCmd = new MySqlCommand(userInfoQuery, conn);
@@ -302,16 +305,17 @@ namespace AP1_GSB_BTS_SIO
                         nom = userInfoReader["nom"].ToString();
                         prenom = userInfoReader["prenom"].ToString();
                         anneeMois = userInfoReader["AnneeMois"].ToString();
-                        etat = userInfoReader["Etat"].ToString();
+                        etat = userInfoReader["etat"].ToString();
                     }
                     userInfoReader.Close();
 
                     // Retrieve frais forfait
                     string fraisForfaitQuery = @"
-        SELECT tf.TypeFrai, ff.Montant_total, f.Etat
+        SELECT tf.TypeFrai, ff.Montant_total, e.etat
         FROM fichedefrais f
         LEFT JOIN fraisforfait ff ON f.id_fichedeFrais = ff.id_fichedeFrais
         LEFT JOIN typefrais tf ON ff.id_typeFrais = tf.id_typeFrais
+        LEFT JOIN etat e ON f.id_etat = e.id_etat
         WHERE f.id_utilisateur = @id_utilisateur
         AND f.AnneeMois = DATE_FORMAT(NOW(), '%Y-%m')";
                     MySqlCommand forfaitCmd = new MySqlCommand(fraisForfaitQuery, conn);
@@ -353,7 +357,7 @@ namespace AP1_GSB_BTS_SIO
                             forfaitTable.AddCell(CreateCell(forfaitReader["TypeFrai"].ToString(), PdfPCell.ALIGN_CENTER));
                             string montantTotal = forfaitReader["Montant_total"].ToString();
                             forfaitTable.AddCell(CreateCell(montantTotal, PdfPCell.ALIGN_CENTER));
-                            forfaitTable.AddCell(CreateCell(forfaitReader["Etat"].ToString(), PdfPCell.ALIGN_CENTER));
+                            forfaitTable.AddCell(CreateCell(forfaitReader["etat"].ToString(), PdfPCell.ALIGN_CENTER));
                             totalForfait += Convert.ToDouble(montantTotal);
                         }
                     }
@@ -362,8 +366,9 @@ namespace AP1_GSB_BTS_SIO
 
                     // Retrieve frais hors forfait
                     string fraisHorsForfaitQuery = @"
-        SELECT hf.description, hf.montant, f.Etat
+        SELECT hf.description, hf.montant, e.etat
         FROM fichedefrais f
+        LEFT JOIN etat e ON f.id_etat = e.id_etat
         LEFT JOIN fraishorsforfait hf ON f.id_fichedeFrais = hf.id_fichedeFrais
         WHERE f.id_utilisateur = @id_utilisateur
         AND f.AnneeMois = DATE_FORMAT(NOW(), '%Y-%m')";
@@ -390,7 +395,7 @@ namespace AP1_GSB_BTS_SIO
                             horsForfaitTable.AddCell(CreateCell(horsForfaitReader["description"].ToString(), PdfPCell.ALIGN_CENTER));
                             string montant = horsForfaitReader["montant"].ToString();
                             horsForfaitTable.AddCell(CreateCell(montant, PdfPCell.ALIGN_CENTER));
-                            horsForfaitTable.AddCell(CreateCell(horsForfaitReader["Etat"].ToString(), PdfPCell.ALIGN_CENTER));
+                            horsForfaitTable.AddCell(CreateCell(horsForfaitReader["etat"].ToString(), PdfPCell.ALIGN_CENTER));
                             totalHorsForfait += Convert.ToDouble(montant);
                         }
                     }

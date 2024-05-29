@@ -26,8 +26,9 @@ namespace AP1_GSB_BTS_SIO
                 {
                     conn.Open();
                     string query = @"
-                        SELECT id_fichedeFrais, AnneeMois, Etat
-                        FROM fichedefrais
+                        SELECT f.id_fichedeFrais, f.AnneeMois, e.Etat
+                        FROM fichedefrais f
+                        LEFT JOIN etat e ON e.id_etat = f.id_etat
                         WHERE id_utilisateur = @id_utilisateur";
                     if (!string.IsNullOrEmpty(anneeMois))
                     {
