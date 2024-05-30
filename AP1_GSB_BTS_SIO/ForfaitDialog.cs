@@ -12,7 +12,7 @@ namespace AP1_GSB_BTS_SIO
         public decimal MontantTotal { get; set; }
         public int Quantite { get; set; }
         public string Date_frais { get; set; }
-        public string AnneeMois { get; set; } // AnneeMois au format "yyyy-MM"
+        public string AnneeMois { get; set; } 
 
         public ForfaitDialog()
         {
@@ -22,7 +22,8 @@ namespace AP1_GSB_BTS_SIO
         private void ForfaitDialog_Load(object sender, EventArgs e)
         {
             LoadTypeFrais();
-            AnneeMois = DateTime.Now.ToString("yyyy-MM");
+            CurrentYearMonth();
+
         }
 
         private void LoadTypeFrais()
@@ -129,6 +130,21 @@ namespace AP1_GSB_BTS_SIO
                 return date >= startRange && date <= endRange;
             }
             return false;
+        }
+        private void CurrentYearMonth()
+        {
+            DateTime date = DateTime.Now;
+            if (date.Day <= 10)
+            {
+                date = date.AddMonths(-1);
+                AnneeMois = date.ToString("yyyy-MM");
+            }
+            else
+            {
+                AnneeMois = date.ToString("yyyy-MM");
+            }
+
+
         }
     }
 }

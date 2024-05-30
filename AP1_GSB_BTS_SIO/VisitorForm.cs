@@ -11,7 +11,7 @@ namespace AP1_GSB_BTS_SIO
     {
         private string connectionString = "server=localhost;user=root;database=ap1_gsb;port=3306;password=;";
         private int visitorId;
-        private String AnneeMois;
+        public string AnneeMois;
 
         public VisitorForm(int visitorId)
         {
@@ -176,7 +176,7 @@ namespace AP1_GSB_BTS_SIO
                         string query = @"
                             INSERT INTO fraisforfait (id_fichedeFrais, id_typeFrais, quantite,Montant_total, date_frais)
                             VALUES (
-                                (SELECT id_fichedeFrais FROM fichedefrais WHERE id_utilisateur = @id_utilisateur AND AnneeMois = @AnneeMois)),
+                                (SELECT id_fichedeFrais FROM fichedefrais WHERE id_utilisateur = @id_utilisateur AND AnneeMois = @AnneeMois),
                                 @id_typeFrais, @quantite,@Montant_total, @date_frais)";
                         MySqlCommand cmd = new MySqlCommand(query, conn);
                         cmd.Parameters.AddWithValue("@id_utilisateur", visitorId);
