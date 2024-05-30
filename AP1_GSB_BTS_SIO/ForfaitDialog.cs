@@ -22,7 +22,6 @@ namespace AP1_GSB_BTS_SIO
         private void ForfaitDialog_Load(object sender, EventArgs e)
         {
             LoadTypeFrais();
-            // Set AnneeMois to the current month (you might want to change this logic depending on your needs)
             AnneeMois = DateTime.Now.ToString("yyyy-MM");
         }
 

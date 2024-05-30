@@ -41,6 +41,7 @@
             this.Montant_Total = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.date = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label2 = new System.Windows.Forms.Label();
+            this.btnRejectReason = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -165,12 +166,23 @@
             this.label2.TabIndex = 7;
             this.label2.Text = "double clickez sur une fiche de frais pour voir les details";
             // 
+            // btnRejectReason
+            // 
+            this.btnRejectReason.Location = new System.Drawing.Point(41, 288);
+            this.btnRejectReason.Name = "btnRejectReason";
+            this.btnRejectReason.Size = new System.Drawing.Size(164, 50);
+            this.btnRejectReason.TabIndex = 8;
+            this.btnRejectReason.Text = "Refuser Avec Motif";
+            this.btnRejectReason.UseVisualStyleBackColor = true;
+            this.btnRejectReason.Click += new System.EventHandler(this.btnRejectReason_Click);
+            // 
             // AccountantForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1131, 576);
             this.ControlBox = false;
+            this.Controls.Add(this.btnRejectReason);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.listViewDetails);
             this.Controls.Add(this.btnReject);
@@ -205,5 +217,6 @@
         private System.Windows.Forms.ColumnHeader Montant_Total;
         private System.Windows.Forms.ColumnHeader date;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button btnRejectReason;
     }
 }

@@ -18,6 +18,9 @@ namespace AP1_GSB_BTS_SIO
             listViewFiche.Items.Clear();
             listViewDetails.Hide();
             label2.Show();
+            btnApprove.Hide();
+            btnReject.Hide();
+            btnRejectReason.Hide();
 
             using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
@@ -164,10 +167,10 @@ namespace AP1_GSB_BTS_SIO
                 ShowDetails(expenseReportId);
                 ShowDetailsH(expenseReportId);
                 label2.Hide();
-            }
-            else { 
-                listViewDetails.Hide();
-                label2.Show();
+                listViewDetails.Show();
+                btnApprove.Show();
+                btnReject.Show();
+                btnRejectReason.Show();
             }
         }
 
@@ -192,33 +195,13 @@ namespace AP1_GSB_BTS_SIO
             {
                 int expenseReportId = (int)listViewFiche.SelectedItems[0].Tag;
                 RejectExpenseReport(expenseReportId);
-                AccountantForm_Load(sender, e); // Recharger les données après le rejet
+                AccountantForm_Load(sender, e);
             }
             else
             {
                 MessageBox.Show("Please select an expense report to reject.");
             }
         }
-
-        // private void btnRejectWithReason_Click(object sender, EventArgs e)
-        // {
-        //    if (listViewFiche.SelectedItems.Count > 0)
-        //  {
-        //  int expenseReportId = (int)listViewFiche.SelectedItems[0].Tag;
-        //    string reason = Prompt.ShowDialog("Enter the rejection reason:", "Reject with Reason");
-        //   if (!string.IsNullOrEmpty(reason))
-        // {
-        //RejectExpenseReportWithReason(expenseReportId, reason);
-        //AccountantForm_Load(sender, e); // Recharger les données après le rejet
-        //}
-        //}
-        //            else
-        //          {
-        // MessageBox.Show("Please select an expense report to reject with reason.");
-        //}
-        //}
-
-       
 
         private void btnLogout_Click(object sender, EventArgs e)
         {
@@ -227,5 +210,71 @@ namespace AP1_GSB_BTS_SIO
             loginForm.ShowDialog();
             this.Close();
         }
+
+        private void RejectExpenseReportWithReason(int expenseReportId, string reason)
+        {
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    string query = "UPDATE fichedefrais SET id_etat = 6 WHERE id_fichedeFrais = @expenseReportId;" +
+                        "INSERT INTO `motif_refus`( `motif`, `id_fichedeFrais`) VALUES (@reason, @expenseReportId)";
+                    MySqlCommand cmd = new MySqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@expenseReportId", expenseReportId);
+                    cmd.Parameters.AddWithValue("@reason", reason);
+                    cmd.ExecuteNonQuery();
+                    MessageBox.Show("Expense report rejected with reason: " + reason);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message);
+                }
+            }
+        }
+
+
+        private void btnRejectReason_Click(object sender, EventArgs e)
+        {
+            if (listViewFiche.SelectedItems.Count > 0)
+            {
+                int expenseReportId = (int)listViewFiche.SelectedItems[0].Tag;
+                string reason = Prompt.ShowDialog("entrez la raison du refus:", "Refuser avec une raison");
+                if (!string.IsNullOrEmpty(reason))
+                {
+                    RejectExpenseReportWithReason(expenseReportId, reason);
+                    AccountantForm_Load(sender, e); // Recharger les données après le rejet
+                }
+            }
+            else
+            {
+                MessageBox.Show("Selectionnez une Fiche de frais pour effectuer une action.");
+            }
+        }
     }
+    public static class Prompt
+    {
+        public static string ShowDialog(string text, string caption)
+        {
+            Form prompt = new Form()
+            {
+                Width = 500,
+                Height = 150,
+                FormBorderStyle = FormBorderStyle.FixedDialog,
+                Text = caption,
+                StartPosition = FormStartPosition.CenterScreen
+            };
+            Label textLabel = new Label() { Left = 50, Top = 20, Text = text };
+            TextBox textBox = new TextBox() { Left = 50, Top = 50, Width = 400 };
+            Button confirmation = new Button() { Text = "Ok", Left = 350, Width = 100, Top = 70, DialogResult = DialogResult.OK };
+            confirmation.Click += (sender, e) => { prompt.Close(); };
+            prompt.Controls.Add(textLabel);
+            prompt.Controls.Add(textBox);
+            prompt.Controls.Add(confirmation);
+            prompt.AcceptButton = confirmation;
+
+            return prompt.ShowDialog() == DialogResult.OK ? textBox.Text : "";
+        }
+    }
+
 }
