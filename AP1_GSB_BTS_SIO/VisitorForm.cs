@@ -339,6 +339,7 @@ namespace AP1_GSB_BTS_SIO
                     createdOn.Alignment = Element.ALIGN_RIGHT;
                     document.Add(createdOn);
 
+                    document.Add(new Paragraph(" ")); // Add empty line
                     // Add user information
                     PdfPTable userInfoTable = new PdfPTable(2);
                     userInfoTable.WidthPercentage = 100;
@@ -350,14 +351,21 @@ namespace AP1_GSB_BTS_SIO
                     userInfoTable.AddCell(cell);
                     userInfoTable.AddCell(CreateCell($"Nom : {nom}", PdfPCell.ALIGN_LEFT));
                     userInfoTable.AddCell(CreateCell($"Prénom : {prenom}", PdfPCell.ALIGN_LEFT));
-                    userInfoTable.AddCell(CreateCell($"Date de création fiche : {dateCreation}", PdfPCell.ALIGN_LEFT));
                     userInfoTable.AddCell(CreateCell($"État fiche : {etat}", PdfPCell.ALIGN_LEFT));
+                    userInfoTable.AddCell(CreateCell($" ", PdfPCell.ALIGN_LEFT));
                     document.Add(userInfoTable);
+
+                    document.Add(new Paragraph(" ")); // Add empty line
+                    document.Add(new Paragraph(" ")); // Add empty line
+                    document.Add(new Paragraph(" ")); // Add empty line
 
                     // Add frais forfait section
                     Paragraph forfaitTitle = new Paragraph("VOS FRAIS FORFAITS", FontFactory.GetFont(FontFactory.HELVETICA, 12, iTextSharp.text.Font.BOLD));
-                    forfaitTitle.Alignment = Element.ALIGN_LEFT;
+                    forfaitTitle.Alignment = Element.ALIGN_CENTER;
                     document.Add(forfaitTitle);
+
+                    document.Add(new Paragraph(" ")); // Add empty line
+                    document.Add(new Paragraph(" ")); // Add empty line
 
                     PdfPTable forfaitTable = new PdfPTable(4);
                     forfaitTable.WidthPercentage = 100;
@@ -396,10 +404,15 @@ namespace AP1_GSB_BTS_SIO
                     forfaitReader.Close();
                     document.Add(forfaitTable);
 
+                    document.Add(new Paragraph(" ")); // Add empty line
+                    document.Add(new Paragraph(" ")); // Add empty line
                     // Add frais hors forfait section
                     Paragraph horsForfaitTitle = new Paragraph("VOS FRAIS HORS FORFAITS", FontFactory.GetFont(FontFactory.HELVETICA, 12, iTextSharp.text.Font.BOLD));
-                    horsForfaitTitle.Alignment = Element.ALIGN_LEFT;
+                    horsForfaitTitle.Alignment = Element.ALIGN_CENTER;
                     document.Add(horsForfaitTitle);
+
+                    document.Add(new Paragraph(" ")); // Add empty line
+                    document.Add(new Paragraph(" ")); // Add empty line
 
                     PdfPTable horsForfaitTable = new PdfPTable(3);
                     horsForfaitTable.WidthPercentage = 100;
@@ -434,10 +447,19 @@ namespace AP1_GSB_BTS_SIO
                     horsForfaitReader.Close();
                     document.Add(horsForfaitTable);
 
+                    document.Add(new Paragraph(" ")); // Add empty line
+
+                    document.Add(new Paragraph(" ")); // Add empty line
+
+                    document.Add(new Paragraph(" ")); // Add empty line
+
                     // Add recap section
                     Paragraph recapTitle = new Paragraph("RECAPITULATIF", FontFactory.GetFont(FontFactory.HELVETICA, 12, iTextSharp.text.Font.BOLD));
                     recapTitle.Alignment = Element.ALIGN_LEFT;
                     document.Add(recapTitle);
+
+                    document.Add(new Paragraph(" ")); // Add empty line
+                    document.Add(new Paragraph(" ")); // Add empty line
 
                     PdfPTable recapTable = new PdfPTable(2);
                     recapTable.WidthPercentage = 50;
@@ -447,6 +469,7 @@ namespace AP1_GSB_BTS_SIO
                     recapTable.AddCell(CreateCell($"{totalHorsForfait.ToString("F2")} €", PdfPCell.ALIGN_RIGHT));
                     recapTable.AddCell(CreateCell("Total de votre fiche de frais :", PdfPCell.ALIGN_LEFT, true));
                     recapTable.AddCell(CreateCell($"{(totalForfait + totalHorsForfait).ToString("F2")} €", PdfPCell.ALIGN_RIGHT));
+                    recapTable.HorizontalAlignment = Element.ALIGN_LEFT;
                     document.Add(recapTable);
 
                     document.Close();
