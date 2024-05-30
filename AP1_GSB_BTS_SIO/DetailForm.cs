@@ -108,9 +108,10 @@ namespace AP1_GSB_BTS_SIO
                     conn.Open();
                     // Retrieve user and fiche info
                     string userInfoQuery = @"
-                        SELECT u.nom, u.prenom, f.AnneeMois, f.Etat
+                        SELECT u.nom, u.prenom, f.AnneeMois, e.etat
                         FROM fichedefrais f
                         JOIN utilisateur u ON f.id_utilisateur = u.id_utilisateur
+                        JOIN etat e ON f.id_etat = e.id_etat
                         WHERE f.id_fichedeFrais = @id_fichedeFrais";
                     MySqlCommand userInfoCmd = new MySqlCommand(userInfoQuery, conn);
                     userInfoCmd.Parameters.AddWithValue("@id_fichedeFrais", ficheDeFraisId);
@@ -121,7 +122,7 @@ namespace AP1_GSB_BTS_SIO
                         nom = userInfoReader["nom"].ToString();
                         prenom = userInfoReader["prenom"].ToString();
                         anneeMois = userInfoReader["AnneeMois"].ToString();
-                        etat = userInfoReader["Etat"].ToString();
+                        etat = userInfoReader["etat"].ToString();
                         dateCreation = DateTime.Now.ToString("dd/MM/yyyy");
                     }
                     userInfoReader.Close();
@@ -270,6 +271,11 @@ namespace AP1_GSB_BTS_SIO
             cell.HorizontalAlignment = alignment;
             cell.Border = PdfPCell.NO_BORDER;
             return cell;
+        }
+
+        private void DetailForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -26,17 +26,16 @@
         private void InitializeComponent()
         {
             this.listViewForfait = new System.Windows.Forms.ListView();
-            this.columnHeaderTypeFrais = new System.Windows.Forms.ColumnHeader();
-            this.columnHeaderQuantite = new System.Windows.Forms.ColumnHeader();
-            this.columnHeaderMontant = new System.Windows.Forms.ColumnHeader();
-            this.columnHeaderDate = new System.Windows.Forms.ColumnHeader();
+            this.columnHeaderTypeFrais = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderQuantite = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderMontant = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.listViewHorsForfait = new System.Windows.Forms.ListView();
-            this.columnHeaderDescription = new System.Windows.Forms.ColumnHeader();
-            this.columnHeaderMontantHors = new System.Windows.Forms.ColumnHeader();
-            this.columnHeaderDateHors = new System.Windows.Forms.ColumnHeader();
+            this.columnHeaderDescription = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderMontantHors = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderDateHors = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnExportPDF = new System.Windows.Forms.Button();
             this.SuspendLayout();
-
             // 
             // listViewForfait
             // 
@@ -47,6 +46,7 @@
             this.columnHeaderDate});
             this.listViewForfait.FullRowSelect = true;
             this.listViewForfait.GridLines = true;
+            this.listViewForfait.HideSelection = false;
             this.listViewForfait.Location = new System.Drawing.Point(12, 12);
             this.listViewForfait.MultiSelect = false;
             this.listViewForfait.Name = "listViewForfait";
@@ -54,31 +54,26 @@
             this.listViewForfait.TabIndex = 0;
             this.listViewForfait.UseCompatibleStateImageBehavior = false;
             this.listViewForfait.View = System.Windows.Forms.View.Details;
-
             // 
             // columnHeaderTypeFrais
             // 
             this.columnHeaderTypeFrais.Text = "Type de frais";
             this.columnHeaderTypeFrais.Width = 90;
-
             // 
             // columnHeaderQuantite
             // 
             this.columnHeaderQuantite.Text = "Quantité";
             this.columnHeaderQuantite.Width = 70;
-
             // 
             // columnHeaderMontant
             // 
             this.columnHeaderMontant.Text = "Montant";
             this.columnHeaderMontant.Width = 90;
-
             // 
             // columnHeaderDate
             // 
             this.columnHeaderDate.Text = "Date";
             this.columnHeaderDate.Width = 110;
-
             // 
             // listViewHorsForfait
             // 
@@ -88,6 +83,7 @@
             this.columnHeaderDateHors});
             this.listViewHorsForfait.FullRowSelect = true;
             this.listViewHorsForfait.GridLines = true;
+            this.listViewHorsForfait.HideSelection = false;
             this.listViewHorsForfait.Location = new System.Drawing.Point(12, 168);
             this.listViewHorsForfait.MultiSelect = false;
             this.listViewHorsForfait.Name = "listViewHorsForfait";
@@ -95,25 +91,21 @@
             this.listViewHorsForfait.TabIndex = 1;
             this.listViewHorsForfait.UseCompatibleStateImageBehavior = false;
             this.listViewHorsForfait.View = System.Windows.Forms.View.Details;
-
             // 
             // columnHeaderDescription
             // 
             this.columnHeaderDescription.Text = "Description";
             this.columnHeaderDescription.Width = 160;
-
             // 
             // columnHeaderMontantHors
             // 
             this.columnHeaderMontantHors.Text = "Montant";
             this.columnHeaderMontantHors.Width = 90;
-
             // 
             // columnHeaderDateHors
             // 
             this.columnHeaderDateHors.Text = "Date";
             this.columnHeaderDateHors.Width = 110;
-
             // 
             // btnExportPDF
             // 
@@ -124,7 +116,6 @@
             this.btnExportPDF.Text = "Exporter en PDF";
             this.btnExportPDF.UseVisualStyleBackColor = true;
             this.btnExportPDF.Click += new System.EventHandler(this.btnExportPDF_Click);
-
             // 
             // DetailForm
             // 
@@ -132,12 +123,14 @@
             this.Controls.Add(this.btnExportPDF);
             this.Controls.Add(this.listViewHorsForfait);
             this.Controls.Add(this.listViewForfait);
-            this.Name = "DetailForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
+            this.Name = "DetailForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Détails des frais";
+            this.Load += new System.EventHandler(this.DetailForm_Load);
             this.ResumeLayout(false);
+
         }
     }
 }

@@ -22,7 +22,14 @@
             this.btnAddJustificatif = new System.Windows.Forms.Button();
             this.btnExportPDF = new System.Windows.Forms.Button();
             this.listViewForfait = new System.Windows.Forms.ListView();
+            this.Type = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.Quantite = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.Total = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.Date = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.listViewHorsForfait = new System.Windows.Forms.ListView();
+            this.Description = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.Montant = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.DateH = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.lblTitleForfait = new System.Windows.Forms.Label();
             this.lblTitleHorsForfait = new System.Windows.Forms.Label();
             this.groupBoxForfait = new System.Windows.Forms.GroupBox();
@@ -30,13 +37,6 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnLogoutV = new System.Windows.Forms.Button();
-            this.Type = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.Quantite = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.Total = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.Date = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.Description = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.Montant = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.DateH = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxForfait.SuspendLayout();
             this.groupBoxHorsForfait.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -111,6 +111,25 @@
             this.listViewForfait.View = System.Windows.Forms.View.Details;
             this.listViewForfait.SelectedIndexChanged += new System.EventHandler(this.listViewForfait_SelectedIndexChanged);
             // 
+            // Type
+            // 
+            this.Type.Text = "Type";
+            // 
+            // Quantite
+            // 
+            this.Quantite.Text = "Quantitée";
+            this.Quantite.Width = 100;
+            // 
+            // Total
+            // 
+            this.Total.Text = "total";
+            this.Total.Width = 100;
+            // 
+            // Date
+            // 
+            this.Date.Text = "date";
+            this.Date.Width = 100;
+            // 
             // listViewHorsForfait
             // 
             this.listViewHorsForfait.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -124,6 +143,21 @@
             this.listViewHorsForfait.TabIndex = 7;
             this.listViewHorsForfait.UseCompatibleStateImageBehavior = false;
             this.listViewHorsForfait.View = System.Windows.Forms.View.Details;
+            // 
+            // Description
+            // 
+            this.Description.Text = "Description";
+            this.Description.Width = 100;
+            // 
+            // Montant
+            // 
+            this.Montant.Text = "Montant";
+            this.Montant.Width = 100;
+            // 
+            // DateH
+            // 
+            this.DateH.Text = "Date";
+            this.DateH.Width = 100;
             // 
             // lblTitleForfait
             // 
@@ -196,37 +230,6 @@
             this.btnLogoutV.Text = "Déconnexion";
             this.btnLogoutV.UseVisualStyleBackColor = false;
             this.btnLogoutV.Click += new System.EventHandler(this.btnLogoutV_Click);
-            // 
-            // Type
-            // 
-            this.Type.Text = "Type";
-            // 
-            // Quantite
-            // 
-            this.Quantite.Text = "Quantitée";
-            this.Quantite.Width = 100;
-            // 
-            // Total
-            // 
-            this.Total.Text = "total";
-            this.Total.Width = 100;
-            // 
-            // Date
-            // 
-            this.Date.Text = "date";
-            this.Date.Width = 100;
-            // 
-            // Description
-            // 
-            this.Description.Text = "Description";
-            // 
-            // Montant
-            // 
-            this.Montant.Text = "Montant";
-            // 
-            // DateH
-            // 
-            this.DateH.Text = "Date";
             // 
             // VisitorForm
             // 

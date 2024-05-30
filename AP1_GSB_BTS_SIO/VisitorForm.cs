@@ -11,12 +11,15 @@ namespace AP1_GSB_BTS_SIO
     {
         private string connectionString = "server=localhost;user=root;database=ap1_gsb;port=3306;password=;";
         private int visitorId;
+        private String AnneeMois;
 
         public VisitorForm(int visitorId)
         {
             InitializeComponent();
+            CurrentYearMonth();
             this.visitorId = visitorId;
             CreateMonthlyExpenseReport();
+
         }
 
         private void VisitorForm_Load(object sender, EventArgs e)
@@ -33,16 +36,17 @@ namespace AP1_GSB_BTS_SIO
                     conn.Open();
                     string query = @"
                         INSERT INTO fichedefrais (id_utilisateur, AnneeMois, Montant, id_etat)
-                        SELECT @id_utilisateur, DATE_FORMAT(NOW(), '%Y-%m'), 0,  1
+                        SELECT @id_utilisateur, @AnneeMois, 0,  1
                         FROM DUAL
                         WHERE NOT EXISTS (
                             SELECT 1
                             FROM fichedefrais
                             WHERE id_utilisateur = @id_utilisateur
-                            AND AnneeMois = DATE_FORMAT(NOW(), '%Y-%m')
+                            AND AnneeMois = @AnneeMois
                         )";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@id_utilisateur", visitorId);
+                    cmd.Parameters.AddWithValue("@AnneeMois", AnneeMois);
                     cmd.ExecuteNonQuery();
                 }
                 catch (Exception ex)
@@ -69,9 +73,10 @@ namespace AP1_GSB_BTS_SIO
         LEFT JOIN fraisforfait ff ON f.id_fichedeFrais = ff.id_fichedeFrais
         LEFT JOIN typefrais tf ON ff.id_typeFrais = tf.id_typeFrais
         WHERE f.id_utilisateur = @id_utilisateur
-        AND f.AnneeMois = DATE_FORMAT(NOW(), '%Y-%m')";
+        AND f.AnneeMois = @AnneeMois";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@id_utilisateur", visitorId);
+                    cmd.Parameters.AddWithValue("@AnneeMois", AnneeMois);
                     MySqlDataReader reader = cmd.ExecuteReader();
                     bool hasRows = false;
                     while (reader.Read())
@@ -116,9 +121,10 @@ namespace AP1_GSB_BTS_SIO
         FROM fichedefrais f
         LEFT JOIN fraishorsforfait hf ON f.id_fichedeFrais = hf.id_fichedeFrais
         WHERE f.id_utilisateur = @id_utilisateur
-        AND f.AnneeMois = DATE_FORMAT(NOW(), '%Y-%m')";
+        AND f.AnneeMois = @AnneeMois";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@id_utilisateur", visitorId);
+                    cmd.Parameters.AddWithValue("@AnneeMois", AnneeMois);
                     MySqlDataReader reader = cmd.ExecuteReader();
                     bool hasRows = false;
                     while (reader.Read())
@@ -170,7 +176,7 @@ namespace AP1_GSB_BTS_SIO
                         string query = @"
                             INSERT INTO fraisforfait (id_fichedeFrais, id_typeFrais, quantite,Montant_total, date_frais)
                             VALUES (
-                                (SELECT id_fichedeFrais FROM fichedefrais WHERE id_utilisateur = @id_utilisateur AND AnneeMois = DATE_FORMAT(NOW(), '%Y-%m')),
+                                (SELECT id_fichedeFrais FROM fichedefrais WHERE id_utilisateur = @id_utilisateur AND AnneeMois = @AnneeMois)),
                                 @id_typeFrais, @quantite,@Montant_total, @date_frais)";
                         MySqlCommand cmd = new MySqlCommand(query, conn);
                         cmd.Parameters.AddWithValue("@id_utilisateur", visitorId);
@@ -178,6 +184,7 @@ namespace AP1_GSB_BTS_SIO
                         cmd.Parameters.AddWithValue("@Montant_total", forfaitDialog.MontantTotal);
                         cmd.Parameters.AddWithValue("@quantite", forfaitDialog.Quantite);
                         cmd.Parameters.AddWithValue("@date_frais", forfaitDialog.Date_frais);
+                        cmd.Parameters.AddWithValue("@AnneeMois", AnneeMois);
                         cmd.ExecuteNonQuery();
                         LoadCurrentExpenseReport();
                     }
@@ -202,13 +209,14 @@ namespace AP1_GSB_BTS_SIO
                         string query = @"
                             INSERT INTO fraishorsforfait (id_fichedeFrais, description, montant, date_fraishors)
                             VALUES (
-                                (SELECT id_fichedeFrais FROM fichedefrais WHERE id_utilisateur = @id_utilisateur AND AnneeMois = DATE_FORMAT(NOW(), '%Y-%m')),
+                                (SELECT id_fichedeFrais FROM fichedefrais WHERE id_utilisateur = @id_utilisateur AND AnneeMois = @AnneeMois),
                                 @description, @montant, @date)";
                         MySqlCommand cmd = new MySqlCommand(query, conn);
                         cmd.Parameters.AddWithValue("@id_utilisateur", visitorId);
                         cmd.Parameters.AddWithValue("@description", horsForfaitDialog.Description);
                         cmd.Parameters.AddWithValue("@montant", horsForfaitDialog.Montant);
                         cmd.Parameters.AddWithValue("@date", horsForfaitDialog.Date_frais);
+                        cmd.Parameters.AddWithValue("@AnneeMois", AnneeMois);
                         cmd.ExecuteNonQuery();
                         LoadCurrentExpenseReport();
                     }
@@ -237,12 +245,13 @@ namespace AP1_GSB_BTS_SIO
                         string query = @"
                             INSERT INTO justificatif (id_ficheFrais, nom_fichier, fichier)
                             VALUES (
-                                (SELECT id_fichedeFrais FROM fichedefrais WHERE id_utilisateur = @id_utilisateur AND AnneeMois = DATE_FORMAT(NOW(), '%Y-%m')),
+                                (SELECT id_fichedeFrais FROM fichedefrais WHERE id_utilisateur = @id_utilisateur AND AnneeMois = @AnneeMois),
                                 @nom_fichier, @fichier)";
                         MySqlCommand cmd = new MySqlCommand(query, conn);
                         cmd.Parameters.AddWithValue("@id_utilisateur", visitorId);
                         cmd.Parameters.AddWithValue("@nom_fichier", fileName);
                         cmd.Parameters.AddWithValue("@fichier", fileData);
+                        cmd.Parameters.AddWithValue("@AnneeMois", AnneeMois);
                         cmd.ExecuteNonQuery();
                         MessageBox.Show("Justificatif ajouté avec succès.");
                     }
@@ -284,54 +293,65 @@ namespace AP1_GSB_BTS_SIO
                 try
                 {
                     conn.Open();
-                    // Retrieve user information
+                    // Retrieve user and fiche info
                     string userInfoQuery = @"
-        SELECT u.nom, u.prenom, f.AnneeMois, e.etat
-        FROM fichedefrais f
-        LEFT JOIN etat e ON f.id_etat = e.id_etat
-        LEFT JOIN utilisateur u ON f.id_utilisateur = u.id_utilisateur
-        WHERE f.id_utilisateur = @id_utilisateur
-        AND f.AnneeMois = DATE_FORMAT(NOW(), '%Y-%m')";
+                        SELECT u.nom, u.prenom, f.AnneeMois, e.etat
+                        FROM fichedefrais f
+                        JOIN utilisateur u ON f.id_utilisateur = u.id_utilisateur
+                        JOIN etat e ON f.id_etat = e.id_etat
+                        WHERE f.id_utilisateur = @id_utilisateur
+                        AND f.AnneeMois = @AnneeMois";
                     MySqlCommand userInfoCmd = new MySqlCommand(userInfoQuery, conn);
                     userInfoCmd.Parameters.AddWithValue("@id_utilisateur", visitorId);
+                    userInfoCmd.Parameters.AddWithValue("@AnneeMois", AnneeMois);
                     MySqlDataReader userInfoReader = userInfoCmd.ExecuteReader();
-                    string nom = "", prenom = "", anneeMois = "", etat = "";
+                    string nom = "", prenom = "", anneeMois = "", etat = "", dateCreation = "";
                     if (userInfoReader.Read())
                     {
                         nom = userInfoReader["nom"].ToString();
                         prenom = userInfoReader["prenom"].ToString();
                         anneeMois = userInfoReader["AnneeMois"].ToString();
                         etat = userInfoReader["etat"].ToString();
+                        dateCreation = DateTime.Now.ToString("dd/MM/yyyy");
                     }
                     userInfoReader.Close();
-
-                    // Retrieve frais forfait
-                    string fraisForfaitQuery = @"
-        SELECT tf.TypeFrai, ff.Montant_total, e.etat
-        FROM fichedefrais f
-        LEFT JOIN fraisforfait ff ON f.id_fichedeFrais = ff.id_fichedeFrais
-        LEFT JOIN typefrais tf ON ff.id_typeFrais = tf.id_typeFrais
-        LEFT JOIN etat e ON f.id_etat = e.id_etat
-        WHERE f.id_utilisateur = @id_utilisateur
-        AND f.AnneeMois = DATE_FORMAT(NOW(), '%Y-%m')";
-                    MySqlCommand forfaitCmd = new MySqlCommand(fraisForfaitQuery, conn);
-                    forfaitCmd.Parameters.AddWithValue("@id_utilisateur", visitorId);
-                    MySqlDataReader forfaitReader = forfaitCmd.ExecuteReader();
 
                     Document document = new Document(PageSize.A4, 50, 50, 25, 25);
                     PdfWriter.GetInstance(document, new FileStream(fileName, FileMode.Create));
                     document.Open();
 
+                    // Add logo
+                    string imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources/GDB_LOGO.png");
+                    if (File.Exists(imagePath))
+                    {
+                        iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(imagePath);
+                        logo.ScaleToFit(100, 50);
+                        logo.Alignment = iTextSharp.text.Image.ALIGN_LEFT;
+                        document.Add(logo);
+                    }
+
+                    // Add title
                     Paragraph title = new Paragraph($"FICHE DE FRAIS DE {anneeMois.ToUpper()}", FontFactory.GetFont(FontFactory.HELVETICA, 16, iTextSharp.text.Font.BOLD));
                     title.Alignment = Element.ALIGN_CENTER;
                     document.Add(title);
 
+                    Paragraph createdOn = new Paragraph($"Créée le : {DateTime.Now.ToString("dd/MM/yyyy")}", FontFactory.GetFont(FontFactory.HELVETICA, 8, iTextSharp.text.Font.ITALIC));
+                    createdOn.Alignment = Element.ALIGN_RIGHT;
+                    document.Add(createdOn);
+
                     // Add user information
                     PdfPTable userInfoTable = new PdfPTable(2);
                     userInfoTable.WidthPercentage = 100;
-                    userInfoTable.AddCell(CreateCell("Nom : " + nom, PdfPCell.ALIGN_LEFT));
-                    userInfoTable.AddCell(CreateCell("Prénom : " + prenom, PdfPCell.ALIGN_LEFT));
-                    userInfoTable.AddCell(CreateCell("État fiche : " + etat, PdfPCell.ALIGN_LEFT));
+                    PdfPCell cell = new PdfPCell(new Phrase("VOS INFORMATIONS", FontFactory.GetFont(FontFactory.HELVETICA, 12, iTextSharp.text.Font.BOLD, new BaseColor(255, 255, 255))));
+                    cell.Colspan = 2;
+                    cell.BackgroundColor = new BaseColor(79, 129, 189);
+                    cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    cell.Padding = 5;
+                    userInfoTable.AddCell(cell);
+                    userInfoTable.AddCell(CreateCell($"Nom : {nom}", PdfPCell.ALIGN_LEFT));
+                    userInfoTable.AddCell(CreateCell($"Prénom : {prenom}", PdfPCell.ALIGN_LEFT));
+                    userInfoTable.AddCell(CreateCell($"Date de création fiche : {dateCreation}", PdfPCell.ALIGN_LEFT));
+                    userInfoTable.AddCell(CreateCell($"État fiche : {etat}", PdfPCell.ALIGN_LEFT));
                     document.Add(userInfoTable);
 
                     // Add frais forfait section
@@ -339,38 +359,42 @@ namespace AP1_GSB_BTS_SIO
                     forfaitTitle.Alignment = Element.ALIGN_LEFT;
                     document.Add(forfaitTitle);
 
-                    PdfPTable forfaitTable = new PdfPTable(3);
+                    PdfPTable forfaitTable = new PdfPTable(4);
                     forfaitTable.WidthPercentage = 100;
+                    forfaitTable.AddCell(CreateCell("Date du frais", PdfPCell.ALIGN_CENTER, true));
                     forfaitTable.AddCell(CreateCell("Nom du frais", PdfPCell.ALIGN_CENTER, true));
+                    forfaitTable.AddCell(CreateCell("Quantité", PdfPCell.ALIGN_CENTER, true));
                     forfaitTable.AddCell(CreateCell("Montant du frais", PdfPCell.ALIGN_CENTER, true));
-                    forfaitTable.AddCell(CreateCell("État", PdfPCell.ALIGN_CENTER, true));
 
                     double totalForfait = 0;
+
+                    string fraisForfaitQuery = @"
+                        SELECT tf.TypeFrai, ff.Montant_total, ff.quantite, DATE_FORMAT(ff.date_frais, '%d/%m/%Y') AS date_frais
+                        FROM fraisforfait ff
+                        JOIN fichedefrais f ON ff.id_fichedeFrais = f.id_fichedeFrais
+                        JOIN typefrais tf ON ff.id_typeFrais = tf.id_typeFrais
+                        WHERE f.id_utilisateur = @id_utilisateur
+                        AND f.AnneeMois = @AnneeMois";
+                    MySqlCommand forfaitCmd = new MySqlCommand(fraisForfaitQuery, conn);
+                    forfaitCmd.Parameters.AddWithValue("@id_utilisateur", visitorId);
+                    forfaitCmd.Parameters.AddWithValue("@AnneeMois", AnneeMois);
+                    MySqlDataReader forfaitReader = forfaitCmd.ExecuteReader();
+
                     while (forfaitReader.Read())
                     {
                         if (!forfaitReader.IsDBNull(forfaitReader.GetOrdinal("TypeFrai")))
                         {
+                            forfaitTable.AddCell(CreateCell(forfaitReader["date_frais"].ToString(), PdfPCell.ALIGN_CENTER));
                             forfaitTable.AddCell(CreateCell(forfaitReader["TypeFrai"].ToString(), PdfPCell.ALIGN_CENTER));
+                            string quantite = forfaitReader["quantite"].ToString();
+                            forfaitTable.AddCell(CreateCell(quantite, PdfPCell.ALIGN_CENTER));
                             string montantTotal = forfaitReader["Montant_total"].ToString();
-                            forfaitTable.AddCell(CreateCell(montantTotal, PdfPCell.ALIGN_CENTER));
-                            forfaitTable.AddCell(CreateCell(forfaitReader["etat"].ToString(), PdfPCell.ALIGN_CENTER));
+                            forfaitTable.AddCell(CreateCell(montantTotal + " €", PdfPCell.ALIGN_CENTER));
                             totalForfait += Convert.ToDouble(montantTotal);
                         }
                     }
                     forfaitReader.Close();
                     document.Add(forfaitTable);
-
-                    // Retrieve frais hors forfait
-                    string fraisHorsForfaitQuery = @"
-        SELECT hf.description, hf.montant, e.etat
-        FROM fichedefrais f
-        LEFT JOIN etat e ON f.id_etat = e.id_etat
-        LEFT JOIN fraishorsforfait hf ON f.id_fichedeFrais = hf.id_fichedeFrais
-        WHERE f.id_utilisateur = @id_utilisateur
-        AND f.AnneeMois = DATE_FORMAT(NOW(), '%Y-%m')";
-                    MySqlCommand horsForfaitCmd = new MySqlCommand(fraisHorsForfaitQuery, conn);
-                    horsForfaitCmd.Parameters.AddWithValue("@id_utilisateur", visitorId);
-                    MySqlDataReader horsForfaitReader = horsForfaitCmd.ExecuteReader();
 
                     // Add frais hors forfait section
                     Paragraph horsForfaitTitle = new Paragraph("VOS FRAIS HORS FORFAITS", FontFactory.GetFont(FontFactory.HELVETICA, 12, iTextSharp.text.Font.BOLD));
@@ -379,19 +403,31 @@ namespace AP1_GSB_BTS_SIO
 
                     PdfPTable horsForfaitTable = new PdfPTable(3);
                     horsForfaitTable.WidthPercentage = 100;
+                    horsForfaitTable.AddCell(CreateCell("Date du frais", PdfPCell.ALIGN_CENTER, true));
                     horsForfaitTable.AddCell(CreateCell("Nom du frais", PdfPCell.ALIGN_CENTER, true));
                     horsForfaitTable.AddCell(CreateCell("Montant du frais", PdfPCell.ALIGN_CENTER, true));
-                    horsForfaitTable.AddCell(CreateCell("État", PdfPCell.ALIGN_CENTER, true));
 
                     double totalHorsForfait = 0;
+
+                    string fraisHorsForfaitQuery = @"
+                        SELECT description, ff.montant, DATE_FORMAT(date_fraishors, '%d/%m/%Y') AS date_fraishors
+                        FROM fraishorsforfait ff
+                        JOIN fichedefrais f ON ff.id_fichedeFrais = f.id_fichedeFrais
+                        WHERE f.id_utilisateur = @id_utilisateur
+                        AND f.AnneeMois = @AnneeMois";
+                    MySqlCommand horsForfaitCmd = new MySqlCommand(fraisHorsForfaitQuery, conn);
+                    horsForfaitCmd.Parameters.AddWithValue("@id_utilisateur", visitorId);
+                    horsForfaitCmd.Parameters.AddWithValue("@AnneeMois", AnneeMois);
+                    MySqlDataReader horsForfaitReader = horsForfaitCmd.ExecuteReader();
+
                     while (horsForfaitReader.Read())
                     {
                         if (!horsForfaitReader.IsDBNull(horsForfaitReader.GetOrdinal("description")))
                         {
+                            horsForfaitTable.AddCell(CreateCell(horsForfaitReader["date_fraishors"].ToString(), PdfPCell.ALIGN_CENTER));
                             horsForfaitTable.AddCell(CreateCell(horsForfaitReader["description"].ToString(), PdfPCell.ALIGN_CENTER));
                             string montant = horsForfaitReader["montant"].ToString();
-                            horsForfaitTable.AddCell(CreateCell(montant, PdfPCell.ALIGN_CENTER));
-                            horsForfaitTable.AddCell(CreateCell(horsForfaitReader["etat"].ToString(), PdfPCell.ALIGN_CENTER));
+                            horsForfaitTable.AddCell(CreateCell(montant + " €", PdfPCell.ALIGN_CENTER));
                             totalHorsForfait += Convert.ToDouble(montant);
                         }
                     }
@@ -442,6 +478,22 @@ namespace AP1_GSB_BTS_SIO
             Form1 loginForm = new Form1();
             loginForm.ShowDialog();
             this.Close();
+        }
+
+        private void CurrentYearMonth()
+        {
+            DateTime date = DateTime.Now;
+            if(date.Day<=10)
+            {
+                date = date.AddMonths(-1);
+                AnneeMois = date.ToString("yyyy-MM");
+            }
+            else
+            {
+                AnneeMois = date.ToString("yyyy-MM");
+            }
+
+            
         }
     }
 }
