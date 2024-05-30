@@ -25,7 +25,7 @@ namespace AP1_GSB_BTS_SIO
                 {
                     conn.Open();
                     string query = @"
-                        SELECT f.id_fichedeFrais, f.AnneeMois, e.Etat , u.nom, u.prenom
+                        SELECT f.id_fichedeFrais, f.AnneeMois, e.etat , u.nom, u.prenom
                         FROM fichedefrais f
                         LEFT JOIN utilisateur u ON u.id_utilisateur = f.id_utilisateur
                         LEFT JOIN etat e ON e.id_etat = f.id_etat
@@ -60,7 +60,7 @@ namespace AP1_GSB_BTS_SIO
                     MySqlCommand cmd = new MySqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@expenseReportId", expenseReportId);
                     cmd.ExecuteNonQuery();
-                    MessageBox.Show("Expense report approved successfully.");
+                    MessageBox.Show("La fiche de frais a bien été approuvée.");
                     conn.Close();
                 }
                 catch (Exception ex)
@@ -80,7 +80,7 @@ namespace AP1_GSB_BTS_SIO
                     MySqlCommand cmd = new MySqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@expenseReportId", expenseReportId);
                     cmd.ExecuteNonQuery();
-                    MessageBox.Show("Expense report rejected successfully.");
+                    MessageBox.Show("La fiche de frais a été Refusée.");
                     conn.Close();
                 }
                 catch (Exception ex)

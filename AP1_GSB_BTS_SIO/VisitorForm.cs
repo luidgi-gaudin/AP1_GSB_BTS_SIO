@@ -64,11 +64,10 @@ namespace AP1_GSB_BTS_SIO
                 {
                     conn.Open();
                     string query = @"
-        SELECT f.id_fichedeFrais, f.AnneeMois, e.etat, ff.id_fraisForfait, ff.Montant_total, tf.TypeFrai, ff.quantite, DATE_FORMAT(ff.date_frais, '%Y-%m-%d') AS date_frais
+        SELECT f.id_fichedeFrais, f.AnneeMois, ff.id_fraisForfait, ff.Montant_total, tf.TypeFrai, ff.quantite, DATE_FORMAT(ff.date_frais, '%Y-%m-%d') AS date_frais
         FROM fichedefrais f
         LEFT JOIN fraisforfait ff ON f.id_fichedeFrais = ff.id_fichedeFrais
         LEFT JOIN typefrais tf ON ff.id_typeFrais = tf.id_typeFrais
-LEFT JOIN etat e ON e.id_etat = f.id_etat
         WHERE f.id_utilisateur = @id_utilisateur
         AND f.AnneeMois = DATE_FORMAT(NOW(), '%Y-%m')";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
@@ -79,7 +78,6 @@ LEFT JOIN etat e ON e.id_etat = f.id_etat
                     {
                         hasRows = true;
                         ListViewItem item = new ListViewItem(reader["TypeFrai"].ToString());
-                        item.SubItems.Add(reader["etat"].ToString());
                         item.SubItems.Add(reader["quantite"].ToString());
                         item.SubItems.Add(reader["Montant_total"].ToString());
 
@@ -114,10 +112,9 @@ LEFT JOIN etat e ON e.id_etat = f.id_etat
                 {
                     conn.Open();
                     string query = @"
-        SELECT f.id_fichedeFrais, f.AnneeMois, e.etat, hf.id_fraisHorsForfait, hf.description, hf.montant, DATE_FORMAT(hf.date_fraishors, '%Y-%m-%d') AS date_fraishors
+        SELECT f.id_fichedeFrais, f.AnneeMois, hf.id_fraisHorsForfait, hf.description, hf.montant, DATE_FORMAT(hf.date_fraishors, '%Y-%m-%d') AS date_fraishors
         FROM fichedefrais f
         LEFT JOIN fraishorsforfait hf ON f.id_fichedeFrais = hf.id_fichedeFrais
-        LEFT JOIN etat e ON e.id_etat = f.id_etat
         WHERE f.id_utilisateur = @id_utilisateur
         AND f.AnneeMois = DATE_FORMAT(NOW(), '%Y-%m')";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
@@ -128,7 +125,6 @@ LEFT JOIN etat e ON e.id_etat = f.id_etat
                     {
                         hasRows = true;
                         ListViewItem item = new ListViewItem(reader["description"].ToString());
-                        item.SubItems.Add(reader["etat"].ToString());
                         item.SubItems.Add(reader["montant"].ToString());
 
                         string dateString = reader["date_fraishors"].ToString();

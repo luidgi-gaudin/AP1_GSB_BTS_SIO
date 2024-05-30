@@ -30,6 +30,13 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnLogoutV = new System.Windows.Forms.Button();
+            this.Type = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.Quantite = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.Total = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.Date = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.Description = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.Montant = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.DateH = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxForfait.SuspendLayout();
             this.groupBoxHorsForfait.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -90,6 +97,11 @@
             // 
             // listViewForfait
             // 
+            this.listViewForfait.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.Type,
+            this.Quantite,
+            this.Total,
+            this.Date});
             this.listViewForfait.HideSelection = false;
             this.listViewForfait.Location = new System.Drawing.Point(6, 48);
             this.listViewForfait.Name = "listViewForfait";
@@ -101,6 +113,10 @@
             // 
             // listViewHorsForfait
             // 
+            this.listViewHorsForfait.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.Description,
+            this.Montant,
+            this.DateH});
             this.listViewHorsForfait.HideSelection = false;
             this.listViewHorsForfait.Location = new System.Drawing.Point(6, 48);
             this.listViewHorsForfait.Name = "listViewHorsForfait";
@@ -181,6 +197,37 @@
             this.btnLogoutV.UseVisualStyleBackColor = false;
             this.btnLogoutV.Click += new System.EventHandler(this.btnLogoutV_Click);
             // 
+            // Type
+            // 
+            this.Type.Text = "Type";
+            // 
+            // Quantite
+            // 
+            this.Quantite.Text = "Quantitée";
+            this.Quantite.Width = 100;
+            // 
+            // Total
+            // 
+            this.Total.Text = "total";
+            this.Total.Width = 100;
+            // 
+            // Date
+            // 
+            this.Date.Text = "date";
+            this.Date.Width = 100;
+            // 
+            // Description
+            // 
+            this.Description.Text = "Description";
+            // 
+            // Montant
+            // 
+            this.Montant.Text = "Montant";
+            // 
+            // DateH
+            // 
+            this.DateH.Text = "Date";
+            // 
             // VisitorForm
             // 
             this.ClientSize = new System.Drawing.Size(1055, 526);
@@ -222,5 +269,12 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnLogoutV;
+        private System.Windows.Forms.ColumnHeader Type;
+        private System.Windows.Forms.ColumnHeader Quantite;
+        private System.Windows.Forms.ColumnHeader Total;
+        private System.Windows.Forms.ColumnHeader Date;
+        private System.Windows.Forms.ColumnHeader Description;
+        private System.Windows.Forms.ColumnHeader Montant;
+        private System.Windows.Forms.ColumnHeader DateH;
     }
 }

@@ -25,6 +25,7 @@
             this.columnHeaderEtat = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.btnSearch = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // listViewHistory
@@ -71,18 +72,33 @@
             this.btnSearch.UseVisualStyleBackColor = true;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(12, 264);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(343, 20);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "Double clickez sur une fiche pour avoir le detail*";
+            // 
             // HistoryForm
             // 
-            this.ClientSize = new System.Drawing.Size(384, 261);
+            this.ClientSize = new System.Drawing.Size(384, 293);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.txtSearch);
             this.Controls.Add(this.listViewHistory);
+            this.MaximizeBox = false;
             this.Name = "HistoryForm";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Historique des fiches de frais";
             this.Load += new System.EventHandler(this.HistoryForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
+        private System.Windows.Forms.Label label2;
     }
 }
