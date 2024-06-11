@@ -15,10 +15,10 @@ namespace AP1_GSB_BTS_SIO
 
         public VisitorForm(int visitorId)
         {
-            InitializeComponent();
             CurrentYearMonth();
             this.visitorId = visitorId;
             CreateMonthlyExpenseReport();
+            InitializeComponent();
 
         }
 
@@ -31,23 +31,47 @@ namespace AP1_GSB_BTS_SIO
         {
             using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
+                MySqlTransaction transaction = null;
+
                 try
                 {
                     conn.Open();
-                    string query = @"
-                        INSERT INTO fichedefrais (id_utilisateur, AnneeMois, Montant, id_etat)
-                        SELECT @id_utilisateur, @AnneeMois, 0,  2
-                        FROM DUAL
-                        WHERE NOT EXISTS (
-                            SELECT 1
-                            FROM fichedefrais
-                            WHERE id_utilisateur = @id_utilisateur
-                            AND AnneeMois = @AnneeMois
-                        )";
-                    MySqlCommand cmd = new MySqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@id_utilisateur", visitorId);
-                    cmd.Parameters.AddWithValue("@AnneeMois", AnneeMois);
-                    cmd.ExecuteNonQuery();
+
+                    // Insérer la nouvelle ligne si elle n'existe pas déjà
+                    string insertQuery = @"
+                INSERT INTO fichedefrais (id_utilisateur, AnneeMois, Montant, id_etat)
+                SELECT @id_utilisateur, @AnneeMois, 0, 2
+                FROM DUAL
+                WHERE NOT EXISTS (
+                    SELECT 1
+                    FROM fichedefrais
+                    WHERE id_utilisateur = @id_utilisateur
+                    AND AnneeMois = @AnneeMois
+                )";
+                    MySqlCommand insertCmd = new MySqlCommand(insertQuery, conn, transaction);
+                    insertCmd.Parameters.AddWithValue("@id_utilisateur", visitorId);
+                    insertCmd.Parameters.AddWithValue("@AnneeMois", AnneeMois);
+                    int rowsAffected = insertCmd.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+                        // Calculer le mois précédent
+                        DateTime currentMonth = DateTime.ParseExact(AnneeMois, "yyyy-MM", null);
+                        string previousMonth = currentMonth.AddMonths(-1).ToString("yyyy-MM");
+
+                        // Mettre à jour l'état du mois précédent
+                        string updateQuery = @"
+                    UPDATE fichedefrais
+                    SET id_etat = 1
+                    WHERE id_utilisateur = @id_utilisateur
+                    AND AnneeMois = @PreviousAnneeMois";
+                        MySqlCommand updateCmd = new MySqlCommand(updateQuery, conn, transaction);
+                        updateCmd.Parameters.AddWithValue("@id_utilisateur", visitorId);
+                        updateCmd.Parameters.AddWithValue("@PreviousAnneeMois", previousMonth);
+                        updateCmd.ExecuteNonQuery();
+
+                        MessageBox.Show("Fiche de frais créée avec succès."+ previousMonth);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -55,6 +79,7 @@ namespace AP1_GSB_BTS_SIO
                 }
             }
         }
+
 
         private void LoadCurrentExpenseReport()
         {
@@ -162,7 +187,7 @@ namespace AP1_GSB_BTS_SIO
 
 
 
-
+        // Execute la commande SQL pour ajouter un frais forfaitaire
         private void btnAddForfait_Click(object sender, EventArgs e)
         {
             ForfaitDialog forfaitDialog = new ForfaitDialog();
@@ -196,6 +221,7 @@ namespace AP1_GSB_BTS_SIO
             }
         }
 
+        // Execute la commande SQL pour ajouter un frais hors forfait
         private void btnAddHorsForfait_Click(object sender, EventArgs e)
         {
             HorsForfaitDialog horsForfaitDialog = new HorsForfaitDialog();
@@ -228,6 +254,7 @@ namespace AP1_GSB_BTS_SIO
             }
         }
 
+        // Execute la commande SQL pour ajouter un justificatif
         private void btnAddJustificatif_Click(object sender, EventArgs e)
         {
             JustificatifDialog justificatifDialog = new JustificatifDialog();
@@ -263,7 +290,7 @@ namespace AP1_GSB_BTS_SIO
             }
         }
 
-
+        // Execute la commande SQL pour ouvrir la fenetre d'historique
         private void BtnViewHistory_Click(object sender, EventArgs e)
         {
             using (HistoryForm historyForm = new HistoryForm(visitorId))
@@ -272,7 +299,7 @@ namespace AP1_GSB_BTS_SIO
             }
         }
 
-
+        // Exporte la fiche de frais au format PDF
         private void btnExportPDF_Click(object sender, EventArgs e)
         {
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
@@ -339,7 +366,7 @@ namespace AP1_GSB_BTS_SIO
                     createdOn.Alignment = Element.ALIGN_RIGHT;
                     document.Add(createdOn);
 
-                    document.Add(new Paragraph(" ")); // Add empty line
+                    document.Add(new Paragraph(" ")); 
                     // Add user information
                     PdfPTable userInfoTable = new PdfPTable(2);
                     userInfoTable.WidthPercentage = 100;
@@ -355,17 +382,17 @@ namespace AP1_GSB_BTS_SIO
                     userInfoTable.AddCell(CreateCell($" ", PdfPCell.ALIGN_LEFT));
                     document.Add(userInfoTable);
 
-                    document.Add(new Paragraph(" ")); // Add empty line
-                    document.Add(new Paragraph(" ")); // Add empty line
-                    document.Add(new Paragraph(" ")); // Add empty line
+                    document.Add(new Paragraph(" ")); 
+                    document.Add(new Paragraph(" ")); 
+                    document.Add(new Paragraph(" ")); 
 
                     // Add frais forfait section
                     Paragraph forfaitTitle = new Paragraph("VOS FRAIS FORFAITS", FontFactory.GetFont(FontFactory.HELVETICA, 12, iTextSharp.text.Font.BOLD));
                     forfaitTitle.Alignment = Element.ALIGN_CENTER;
                     document.Add(forfaitTitle);
 
-                    document.Add(new Paragraph(" ")); // Add empty line
-                    document.Add(new Paragraph(" ")); // Add empty line
+                    document.Add(new Paragraph(" ")); 
+                    document.Add(new Paragraph(" ")); 
 
                     PdfPTable forfaitTable = new PdfPTable(4);
                     forfaitTable.WidthPercentage = 100;
@@ -404,15 +431,15 @@ namespace AP1_GSB_BTS_SIO
                     forfaitReader.Close();
                     document.Add(forfaitTable);
 
-                    document.Add(new Paragraph(" ")); // Add empty line
-                    document.Add(new Paragraph(" ")); // Add empty line
+                    document.Add(new Paragraph(" ")); 
+                    document.Add(new Paragraph(" ")); 
                     // Add frais hors forfait section
                     Paragraph horsForfaitTitle = new Paragraph("VOS FRAIS HORS FORFAITS", FontFactory.GetFont(FontFactory.HELVETICA, 12, iTextSharp.text.Font.BOLD));
                     horsForfaitTitle.Alignment = Element.ALIGN_CENTER;
                     document.Add(horsForfaitTitle);
 
-                    document.Add(new Paragraph(" ")); // Add empty line
-                    document.Add(new Paragraph(" ")); // Add empty line
+                    document.Add(new Paragraph(" ")); 
+                    document.Add(new Paragraph(" ")); 
 
                     PdfPTable horsForfaitTable = new PdfPTable(3);
                     horsForfaitTable.WidthPercentage = 100;
@@ -447,19 +474,19 @@ namespace AP1_GSB_BTS_SIO
                     horsForfaitReader.Close();
                     document.Add(horsForfaitTable);
 
-                    document.Add(new Paragraph(" ")); // Add empty line
+                    document.Add(new Paragraph(" ")); 
 
-                    document.Add(new Paragraph(" ")); // Add empty line
+                    document.Add(new Paragraph(" ")); 
 
-                    document.Add(new Paragraph(" ")); // Add empty line
+                    document.Add(new Paragraph(" ")); 
 
                     // Add recap section
                     Paragraph recapTitle = new Paragraph("RECAPITULATIF", FontFactory.GetFont(FontFactory.HELVETICA, 12, iTextSharp.text.Font.BOLD));
                     recapTitle.Alignment = Element.ALIGN_LEFT;
                     document.Add(recapTitle);
 
-                    document.Add(new Paragraph(" ")); // Add empty line
-                    document.Add(new Paragraph(" ")); // Add empty line
+                    document.Add(new Paragraph(" ")); 
+                    document.Add(new Paragraph(" ")); 
 
                     PdfPTable recapTable = new PdfPTable(2);
                     recapTable.WidthPercentage = 50;
