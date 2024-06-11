@@ -36,7 +36,7 @@ namespace AP1_GSB_BTS_SIO
                     conn.Open();
                     string query = @"
                         INSERT INTO fichedefrais (id_utilisateur, AnneeMois, Montant, id_etat)
-                        SELECT @id_utilisateur, @AnneeMois, 0,  1
+                        SELECT @id_utilisateur, @AnneeMois, 0,  2
                         FROM DUAL
                         WHERE NOT EXISTS (
                             SELECT 1
