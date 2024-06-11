@@ -70,7 +70,7 @@ namespace AP1_GSB_BTS_SIO
                         updateCmd.Parameters.AddWithValue("@PreviousAnneeMois", previousMonth);
                         updateCmd.ExecuteNonQuery();
 
-                        MessageBox.Show("Fiche de frais créée avec succès."+ previousMonth);
+                        MessageBox.Show("Fiche de frais créée avec succès.");
                     }
                 }
                 catch (Exception ex)
