@@ -347,17 +347,8 @@ namespace AP1_GSB_BTS_SIO
                     PdfWriter.GetInstance(document, new FileStream(fileName, FileMode.Create));
                     document.Open();
 
-                    // Add logo
-                    string imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources/GDB_LOGO.png");
-                    if (File.Exists(imagePath))
-                    {
-                        iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(imagePath);
-                        logo.ScaleToFit(100, 50);
-                        logo.Alignment = iTextSharp.text.Image.ALIGN_LEFT;
-                        document.Add(logo);
-                    }
 
-                    // Add title
+                    // Titre
                     Paragraph title = new Paragraph($"FICHE DE FRAIS DE {anneeMois.ToUpper()}", FontFactory.GetFont(FontFactory.HELVETICA, 16, iTextSharp.text.Font.BOLD));
                     title.Alignment = Element.ALIGN_CENTER;
                     document.Add(title);
@@ -367,7 +358,7 @@ namespace AP1_GSB_BTS_SIO
                     document.Add(createdOn);
 
                     document.Add(new Paragraph(" ")); 
-                    // Add user information
+                    // Information utilisateur
                     PdfPTable userInfoTable = new PdfPTable(2);
                     userInfoTable.WidthPercentage = 100;
                     PdfPCell cell = new PdfPCell(new Phrase("VOS INFORMATIONS", FontFactory.GetFont(FontFactory.HELVETICA, 12, iTextSharp.text.Font.BOLD, new BaseColor(255, 255, 255))));
@@ -386,7 +377,7 @@ namespace AP1_GSB_BTS_SIO
                     document.Add(new Paragraph(" ")); 
                     document.Add(new Paragraph(" ")); 
 
-                    // Add frais forfait section
+                    // Tableau des frais forfait
                     Paragraph forfaitTitle = new Paragraph("VOS FRAIS FORFAITS", FontFactory.GetFont(FontFactory.HELVETICA, 12, iTextSharp.text.Font.BOLD));
                     forfaitTitle.Alignment = Element.ALIGN_CENTER;
                     document.Add(forfaitTitle);
@@ -432,8 +423,8 @@ namespace AP1_GSB_BTS_SIO
                     document.Add(forfaitTable);
 
                     document.Add(new Paragraph(" ")); 
-                    document.Add(new Paragraph(" ")); 
-                    // Add frais hors forfait section
+                    document.Add(new Paragraph(" "));
+                    // Tableau des frais hors forfait
                     Paragraph horsForfaitTitle = new Paragraph("VOS FRAIS HORS FORFAITS", FontFactory.GetFont(FontFactory.HELVETICA, 12, iTextSharp.text.Font.BOLD));
                     horsForfaitTitle.Alignment = Element.ALIGN_CENTER;
                     document.Add(horsForfaitTitle);
@@ -480,7 +471,7 @@ namespace AP1_GSB_BTS_SIO
 
                     document.Add(new Paragraph(" ")); 
 
-                    // Add recap section
+                    // Recapitulatif
                     Paragraph recapTitle = new Paragraph("RECAPITULATIF", FontFactory.GetFont(FontFactory.HELVETICA, 12, iTextSharp.text.Font.BOLD));
                     recapTitle.Alignment = Element.ALIGN_LEFT;
                     document.Add(recapTitle);
