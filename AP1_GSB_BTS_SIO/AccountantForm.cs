@@ -12,7 +12,8 @@ namespace AP1_GSB_BTS_SIO
         {
             InitializeComponent();
         }
-
+        // Charger les données et fait disparaitre les boutons non souhaiter
+        #region intitialisation
         private void AccountantForm_Load(object sender, EventArgs e)
         {
             listViewFiche.Items.Clear();
@@ -52,6 +53,10 @@ namespace AP1_GSB_BTS_SIO
                 }
             }
         }
+        #endregion
+
+        // requete SQL pour approuver une fiche de frais 
+        #region approuver une fiche de frais
         private void ApproveExpenseReport(int expenseReportId)
         {
             using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -72,6 +77,10 @@ namespace AP1_GSB_BTS_SIO
                 }
             }
         }
+        #endregion
+
+        // requete SQL pour refuser une fiche de frais
+        #region refuser une fiche de frais
         private void RejectExpenseReport(int expenseReportId)
         {
             using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -92,7 +101,10 @@ namespace AP1_GSB_BTS_SIO
                 }
             }
         }
+        #endregion
 
+        // requete SQL pour afficher les details d'une fiche de frais
+        #region afficher les details d'une fiche de frais
         private void ShowDetails(int expenseReportId)
         {
             using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -126,6 +138,10 @@ namespace AP1_GSB_BTS_SIO
                 }
             }
         }
+        #endregion
+
+        // requete SQL pour afficher les details d'une fiche de frais hors forfait
+        #region afficher les details d'une fiche de frais hors forfait
         private void ShowDetailsH(int expenseReportId)
         {
             using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -157,7 +173,10 @@ namespace AP1_GSB_BTS_SIO
             }
         }
 
+        #endregion
 
+        // Evenement pour afficher les boutons et les details d'une fiche de frais
+        #region afficher les details d'une fiche de frais
 
         private void listViewFiche_ItemActivate(object sender, EventArgs e)
         {
@@ -173,6 +192,10 @@ namespace AP1_GSB_BTS_SIO
                 btnRejectReason.Show();
             }
         }
+        #endregion
+
+        // evenement boutons clicker
+        #region evenement boutons clicker
 
         private void btnApprove_Click(object sender, EventArgs e)
         {
@@ -210,7 +233,27 @@ namespace AP1_GSB_BTS_SIO
             loginForm.ShowDialog();
             this.Close();
         }
+        private void btnRejectReason_Click(object sender, EventArgs e)
+        {
+            if (listViewFiche.SelectedItems.Count > 0)
+            {
+                int expenseReportId = (int)listViewFiche.SelectedItems[0].Tag;
+                string reason = Prompt.ShowDialog("entrez la raison du refus:", "Refuser avec une raison");
+                if (!string.IsNullOrEmpty(reason))
+                {
+                    RejectExpenseReportWithReason(expenseReportId, reason);
+                    AccountantForm_Load(sender, e); // Recharger les données après le rejet
+                }
+            }
+            else
+            {
+                MessageBox.Show("Selectionnez une Fiche de frais pour effectuer une action.");
+            }
+        }
+        #endregion
 
+        // requete SQL pour refuser une fiche de frais avec une raison
+        #region refuser une fiche de frais avec une raison
         private void RejectExpenseReportWithReason(int expenseReportId, string reason)
         {
             using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -232,26 +275,12 @@ namespace AP1_GSB_BTS_SIO
                 }
             }
         }
+        #endregion
 
-
-        private void btnRejectReason_Click(object sender, EventArgs e)
-        {
-            if (listViewFiche.SelectedItems.Count > 0)
-            {
-                int expenseReportId = (int)listViewFiche.SelectedItems[0].Tag;
-                string reason = Prompt.ShowDialog("entrez la raison du refus:", "Refuser avec une raison");
-                if (!string.IsNullOrEmpty(reason))
-                {
-                    RejectExpenseReportWithReason(expenseReportId, reason);
-                    AccountantForm_Load(sender, e); // Recharger les données après le rejet
-                }
-            }
-            else
-            {
-                MessageBox.Show("Selectionnez une Fiche de frais pour effectuer une action.");
-            }
-        }
     }
+    // Classe pour afficher une Popup
+#region Popup
+
     public static class Prompt
     {
         public static string ShowDialog(string text, string caption)
@@ -278,3 +307,4 @@ namespace AP1_GSB_BTS_SIO
     }
 
 }
+#endregion

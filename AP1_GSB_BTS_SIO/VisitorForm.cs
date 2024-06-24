@@ -13,20 +13,21 @@ namespace AP1_GSB_BTS_SIO
         private int visitorId;
         public string AnneeMois;
 
+        // intitalisation des differentes données pour le visiteur
         public VisitorForm(int visitorId)
         {
             CurrentYearMonth();
             this.visitorId = visitorId;
             CreateMonthlyExpenseReport();
             InitializeComponent();
-
         }
 
         private void VisitorForm_Load(object sender, EventArgs e)
         {
             LoadCurrentExpenseReport();
         }
-
+        //verifie si la fiche de frais existe et la crée si elle n'existe pas
+        #region Verifie si la fiche de frais existe et la crée si elle n'existe pas
         private void CreateMonthlyExpenseReport()
         {
             using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -79,8 +80,10 @@ namespace AP1_GSB_BTS_SIO
                 }
             }
         }
+        #endregion
 
-
+        //charger la fiche de frais actuelle
+        #region Charger la fiche de frais actuelle
         private void LoadCurrentExpenseReport()
         {
             listViewForfait.Items.Clear();
@@ -182,11 +185,12 @@ namespace AP1_GSB_BTS_SIO
                 }
             }
         }
+        #endregion
 
 
 
-
-
+        //commandes SQL ajout modif
+        #region commande SQL ajout modif
         // Execute la commande SQL pour ajouter un frais forfaitaire
         private void btnAddForfait_Click(object sender, EventArgs e)
         {
@@ -289,6 +293,7 @@ namespace AP1_GSB_BTS_SIO
                 }
             }
         }
+        #endregion
 
         // Execute la commande SQL pour ouvrir la fenetre d'historique
         private void BtnViewHistory_Click(object sender, EventArgs e)
@@ -299,6 +304,9 @@ namespace AP1_GSB_BTS_SIO
             }
         }
 
+
+        // fait le pdf
+        #region PDF
         // Exporte la fiche de frais au format PDF
         private void btnExportPDF_Click(object sender, EventArgs e)
         {
@@ -508,11 +516,13 @@ namespace AP1_GSB_BTS_SIO
             cell.Border = PdfPCell.NO_BORDER;
             return cell;
         }
+        #endregion
 
         private void listViewForfait_SelectedIndexChanged(object sender, EventArgs e)
         {
         }
 
+        // Ramene au login
         private void btnLogoutV_Click(object sender, EventArgs e)
         {
             this.Hide();
@@ -521,6 +531,7 @@ namespace AP1_GSB_BTS_SIO
             this.Close();
         }
 
+        //calcule l'annee mois actuel
         private void CurrentYearMonth()
         {
             DateTime date = DateTime.Now;

@@ -8,6 +8,7 @@ namespace AP1_GSB_BTS_SIO
     {
         private string connectionString = "server=localhost;user=root;database=ap1_gsb;port=3306;password=;";
 
+        #region afficher les données
         public AdminForm()
         {
             InitializeComponent();
@@ -20,7 +21,9 @@ namespace AP1_GSB_BTS_SIO
             LoadUsers();
             LoadTypes();
         }
+        #endregion
 
+        #region REQUETES SQL SELECT
         private void LoadUsers()
         {
             listViewUsers.Items.Clear();
@@ -76,7 +79,9 @@ namespace AP1_GSB_BTS_SIO
                 }
             }
         }
+        #endregion
 
+        #region Actions sur les données via bouton + ouverture popup
         private void btnAddUser_Click(object sender, EventArgs e)
         {
             UserDialog userDialog = new UserDialog();
@@ -280,5 +285,6 @@ namespace AP1_GSB_BTS_SIO
             loginForm.ShowDialog();
             this.Close();
         }
+        #endregion
     }
 }
