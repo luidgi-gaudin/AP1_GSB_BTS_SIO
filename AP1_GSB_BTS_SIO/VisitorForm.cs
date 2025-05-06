@@ -26,6 +26,7 @@ namespace AP1_GSB_BTS_SIO
         {
             LoadCurrentExpenseReport();
         }
+
         //verifie si la fiche de frais existe et la crée si elle n'existe pas
         #region Verifie si la fiche de frais existe et la crée si elle n'existe pas
         private void CreateMonthlyExpenseReport()

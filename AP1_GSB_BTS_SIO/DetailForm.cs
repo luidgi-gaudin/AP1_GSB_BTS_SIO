@@ -4,6 +4,8 @@ using MySql.Data.MySqlClient;
 using System;
 using System.IO;
 using System.Windows.Forms;
+using System.Collections.Generic;
+using AP1_GSB_BTS_SIO.Models;
 
 namespace AP1_GSB_BTS_SIO
 {
@@ -11,80 +13,44 @@ namespace AP1_GSB_BTS_SIO
     {
         private string connectionString = "server=localhost;user=root;database=ap1_gsb;port=3306;password=;";
         private int ficheDeFraisId;
+        private DetailFraisService _detailFraisService;
+        private List<DetailFrais> _detailsFraisF;
+        private List<DetailFrais> _detailsFraisH;
+
 
         public DetailForm(int ficheDeFraisId)
         {
             InitializeComponent();
-            this.ficheDeFraisId = ficheDeFraisId;
+            string connectionString = "server=localhost;user=root;database=ap1_gsb;port=3306;password=;";
+            _detailFraisService = new DetailFraisService(connectionString);
+            _detailsFraisF = _detailFraisService.GetDetailsForfaitByFiche(ficheDeFraisId);
+            _detailsFraisH = _detailFraisService.GetDetailsHorsForfaitByFiche(ficheDeFraisId);
             LoadDetails();
-            StartPosition = FormStartPosition.CenterScreen;
-            FormBorderStyle = FormBorderStyle.FixedDialog;
-            MaximizeBox = false;
         }
+
 
         private void LoadDetails()
         {
             listViewForfait.Items.Clear();
-            listViewHorsForfait.Items.Clear();
-
-            // Load frais forfait
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            foreach (var detail in _detailsFraisF)
             {
-                try
-                {
-                    conn.Open();
-                    string query = @"
-                        SELECT tf.TypeFrai, ff.Montant_total, ff.quantite, DATE_FORMAT(ff.date_frais, '%Y-%m-%d') AS date_frais
-                        FROM fraisforfait ff
-                        JOIN typefrais tf ON ff.id_typeFrais = tf.id_typeFrais
-                        WHERE ff.id_fichedeFrais = @id_fichedeFrais";
-                    MySqlCommand cmd = new MySqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@id_fichedeFrais", ficheDeFraisId);
-                    MySqlDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        ListViewItem item = new ListViewItem(reader["TypeFrai"].ToString());
-                        item.SubItems.Add(reader["quantite"].ToString());
-                        item.SubItems.Add(reader["Montant_total"].ToString());
-                        item.SubItems.Add(reader["date_frais"].ToString());
-                        listViewForfait.Items.Add(item);
-                    }
-                    reader.Close();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Erreur lors du chargement des frais forfait : " + ex.Message);
-                }
+                var item = new ListViewItem(detail.TypeFrai);
+                item.SubItems.Add(detail.Quantite.ToString());
+                item.SubItems.Add(detail.Montant.ToString("F2") + " €");
+                item.SubItems.Add(detail.DateFrais.ToShortDateString());
+                listViewForfait.Items.Add(item);
             }
-
-            // Load frais hors forfait
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            listViewHorsForfait.Items.Clear();
+            foreach (var detail in _detailsFraisH)
             {
-                try
-                {
-                    conn.Open();
-                    string query = @"
-                        SELECT description, montant, DATE_FORMAT(date_fraishors, '%Y-%m-%d') AS date_fraishors
-                        FROM fraishorsforfait
-                        WHERE id_fichedeFrais = @id_fichedeFrais";
-                    MySqlCommand cmd = new MySqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@id_fichedeFrais", ficheDeFraisId);
-                    MySqlDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        ListViewItem item = new ListViewItem(reader["description"].ToString());
-                        item.SubItems.Add(reader["montant"].ToString());
-                        item.SubItems.Add(reader["date_fraishors"].ToString());
-                        listViewHorsForfait.Items.Add(item);
-                    }
-                    reader.Close();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Erreur lors du chargement des frais hors forfait : " + ex.Message);
-                }
+               var item = new ListViewItem(detail.TypeFrai);
+               item.SubItems.Add(detail.Montant.ToString("F2") + " €");
+               item.SubItems.Add(detail.DateFrais.ToShortDateString());
+               listViewHorsForfait.Items.Add(item);
+
             }
         }
+
 
         private void btnExportPDF_Click(object sender, EventArgs e)
         {
