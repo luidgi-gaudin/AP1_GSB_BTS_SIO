@@ -4,6 +4,9 @@ using MySql.Data.MySqlClient;
 using System;
 using System.IO;
 using System.Windows.Forms;
+using AP1_GSB_BTS_SIO.Models;
+using AP1_GSB_BTS_SIO.Services;
+using System.Collections.Generic;
 
 namespace AP1_GSB_BTS_SIO
 {
@@ -12,6 +15,13 @@ namespace AP1_GSB_BTS_SIO
         private string connectionString = "server=localhost;user=root;database=ap1_gsb;port=3306;password=;";
         private int visitorId;
         public string AnneeMois;
+        private readonly int _visitorId;
+        private readonly FicheDeFraisService _ficheService;
+        private readonly DetailFraisService _detailService;
+        private FicheDeFrais _currentFiche;
+        private List<DetailFrais> _forfaitFrais;
+        private List<DetailFrais> _horsForfaitFrais;
+
 
         // intitalisation des differentes données pour le visiteur
         public VisitorForm(int visitorId)

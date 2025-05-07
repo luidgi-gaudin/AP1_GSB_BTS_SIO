@@ -108,9 +108,12 @@
       <DependentUpon>JustificatifDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\DetailFrais.cs" />
+    <Compile Include="Models\EtatFiche.cs" />
+    <Compile Include="Models\FicheDeFrais.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="services\DetailFraisService.cs" />
+    <Compile Include="services\FicheDeFraisService.cs" />
     <Compile Include="TypeDialog.cs">
       <SubType>Form</SubType>
     </Compile>
