@@ -208,7 +208,7 @@ namespace AP1_GSB_BTS_SIO
             }
             else
             {
-                MessageBox.Show("Please select an expense report to approve.");
+                MessageBox.Show("Sélectionnez une Fiche de frais pour effectuer une action.");
             }
         }
 
@@ -267,7 +267,7 @@ namespace AP1_GSB_BTS_SIO
                     cmd.Parameters.AddWithValue("@expenseReportId", expenseReportId);
                     cmd.Parameters.AddWithValue("@reason", reason);
                     cmd.ExecuteNonQuery();
-                    MessageBox.Show("Expense report rejected with reason: " + reason);
+                    MessageBox.Show("Fiche de frais refusé pour : " + reason);
                 }
                 catch (Exception ex)
                 {
